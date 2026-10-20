@@ -1,0 +1,530 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ระบบของครูปรัชญา</title>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600&family=Nunito:wght@600;700;800&family=Sarabun:wght@400;500;600&display=swap" rel="stylesheet">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<style id="css">
+/* Layout: soft pastel teacher dashboard. Frosted sidebar menu | top bar, blossom banner, icon-tile board, today's classes + month calendar */
+:root{
+  --bg1:#fdeef3; --bg2:#f8f0f8; --bg3:#eef2fb;
+  --glass:rgba(255,255,255,.78); --surface:#ffffff; --sunk:#f7f1f6; --line:#f0e3ec;
+  --ink:#3d3552; --muted:#8a8199; --rose:#e8789c; --rose-deep:#d45a83; --rose-soft:#fde3ec; --rose-ink:#ffffff;
+  --today:#ef8fae; --bad:#c8312a;
+  --tb:97%; --tf:89%; --ts:55%; --tsl:56%; --tline:92%;
+  --shadow:0 1px 2px rgba(150,90,120,.05),0 10px 30px rgba(150,90,120,.08);
+  --shadow-hi:0 2px 6px rgba(150,90,120,.08),0 18px 40px rgba(150,90,120,.16);
+  --f-display:"Prompt","Sarabun",system-ui,sans-serif;
+  --f-latin:"Nunito","Prompt",system-ui,sans-serif;
+  --f-body:"Sarabun","Prompt","Leelawadee UI",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg1:#241a2b; --bg2:#1e1a2e; --bg3:#191c2e;
+  --glass:rgba(40,32,54,.82); --surface:#2b2340; --sunk:#241d36; --line:#3e3356;
+  --ink:#f3ecf7; --muted:#b8aec8; --rose:#f49ab8; --rose-deep:#ffb3ca; --rose-soft:#4a2a3d; --rose-ink:#2a1020;
+  --today:#e8789c; --bad:#ff8f86;
+  --tb:22%; --tf:34%; --ts:45%; --tsl:78%; --tline:30%;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px rgba(0,0,0,.25);
+  --shadow-hi:0 2px 6px rgba(0,0,0,.35),0 18px 40px rgba(0,0,0,.4); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg1:#241a2b; --bg2:#1e1a2e; --bg3:#191c2e;
+  --glass:rgba(40,32,54,.82); --surface:#2b2340; --sunk:#241d36; --line:#3e3356;
+  --ink:#f3ecf7; --muted:#b8aec8; --rose:#f49ab8; --rose-deep:#ffb3ca; --rose-soft:#4a2a3d; --rose-ink:#2a1020;
+  --today:#e8789c; --bad:#ff8f86;
+  --tb:22%; --tf:34%; --ts:45%; --tsl:78%; --tline:30%;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px rgba(0,0,0,.25);
+  --shadow-hi:0 2px 6px rgba(0,0,0,.35),0 18px 40px rgba(0,0,0,.4); color-scheme:dark}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{background:linear-gradient(135deg,var(--bg1) 0%,var(--bg2) 45%,var(--bg3) 100%) fixed;color:var(--ink);font-family:var(--f-body);font-size:15.5px;line-height:1.55}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--rose);outline-offset:2px}
+.wrap{max-width:1280px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px 100px;display:grid;grid-template-columns:230px minmax(0,1fr);gap:20px;align-items:start}
+
+/* icons */
+.fi{display:block}
+.fi .f{fill:hsl(var(--h) 90% var(--tf));stroke:hsl(var(--h) var(--ts) var(--tsl));stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round}
+.fi .s{fill:none;stroke:hsl(var(--h) var(--ts) var(--tsl));stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round}
+.fi .d{fill:hsl(var(--h) var(--ts) var(--tsl));stroke:none}
+.fi .w{fill:var(--surface);stroke:hsl(var(--h) var(--ts) var(--tsl));stroke-width:2.4;stroke-linejoin:round}
+.fi text{fill:hsl(var(--h) var(--ts) var(--tsl));font-family:"Nunito",sans-serif;font-weight:800}
+
+/* sidebar */
+.side{position:sticky;top:calc(env(safe-area-inset-top,0px) + 18px);background:var(--glass);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:26px;box-shadow:var(--shadow);padding:20px 12px;display:grid;gap:14px}
+.logo{display:grid;justify-items:center;gap:6px;padding:4px 6px 14px;border-bottom:1px solid var(--line);text-align:center}
+.logo .em{width:84px;height:84px;border-radius:50%;background:var(--surface);display:grid;place-items:center;overflow:hidden;box-shadow:0 0 0 4px var(--rose-soft)}
+.logo .em img{width:100%;height:100%;object-fit:contain}
+.logo .em svg{width:64px;height:64px}
+.logo small{font-size:12.5px;color:var(--muted);line-height:1.35}
+.nav{display:grid;gap:3px}
+.nav button{display:flex;align-items:center;gap:11px;border:0;background:transparent;padding:9px 12px;border-radius:14px;cursor:pointer;text-align:left;font-family:var(--f-display);font-size:14.5px;color:var(--ink)}
+.nav button:hover{background:var(--sunk)}
+.nav button[aria-current="page"]{background:var(--rose-soft);color:var(--rose-deep);font-weight:500}
+.nav .fi{width:26px;height:26px;flex:none}
+.nav .n{margin-left:auto;font-family:var(--f-latin);font-weight:800;font-size:12px;color:var(--muted)}
+
+/* top */
+.main{display:grid;gap:18px;min-width:0}
+.top{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.top .ttl{flex:1 1 220px;min-width:0}
+.top h1{font-family:var(--f-latin);font-weight:800;font-size:clamp(22px,3vw,28px);margin:0;line-height:1.2}
+.top h1 span{font-family:var(--f-display);font-weight:600}
+.tagline{font-size:13.5px;color:var(--muted);font-family:var(--f-latin);font-weight:600}
+.search{position:relative;flex:0 1 300px;min-width:200px}
+.search input{width:100%;padding:11px 16px 11px 42px;border:1px solid var(--line);border-radius:999px;background:var(--glass);font-size:15px;box-shadow:var(--shadow)}
+.search input:focus{outline:none;border-color:var(--rose);box-shadow:0 0 0 4px var(--rose-soft)}
+.search svg{position:absolute;left:15px;top:50%;transform:translateY(-50%);width:18px;height:18px;stroke:var(--muted);fill:none;stroke-width:2.2;stroke-linecap:round}
+.me{width:46px;height:46px;border-radius:50%;overflow:hidden;background:var(--rose-soft);border:3px solid var(--surface);box-shadow:var(--shadow);flex:none;display:grid;place-items:center}
+.me img{width:100%;height:100%;object-fit:cover;object-position:center 20%}
+.me span{font-family:var(--f-display);font-weight:600;color:var(--rose-deep)}
+
+/* banner */
+.banner{position:relative;border-radius:26px;overflow:hidden;min-height:210px;box-shadow:var(--shadow);background:linear-gradient(120deg,#fde4ee 0%,#fbeaf3 40%,#f6e9f6 70%,#e9eefb 100%);display:flex;align-items:center}
+.banner .art{position:absolute;inset:0;width:100%;height:100%}
+.banner .photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.banner .veil{position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,246,250,.94) 0%,rgba(255,246,250,.82) 38%,rgba(255,246,250,0) 70%)}
+.banner .txt{position:relative;padding:26px 30px;max-width:520px;display:grid;gap:6px;color:#3d3552}
+.banner .hello{font-family:var(--f-latin);font-weight:800;font-size:clamp(24px,3.4vw,34px);line-height:1.15}
+.banner .nm{font-family:var(--f-display);font-weight:500;font-size:16px;color:#b04a72}
+.banner .q{font-family:var(--f-display);font-size:15px;color:#6e6182}
+.banner .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.banner .tag{font-size:12.5px;font-family:var(--f-display);padding:2px 11px;border-radius:999px;background:rgba(255,255,255,.85);color:#7a5a76;border:1px solid #f3d6e3}
+
+/* board */
+.panel{background:var(--glass);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:26px;box-shadow:var(--shadow);padding:20px;display:grid;gap:18px;min-width:0}
+.phead{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.phead h2{font-family:var(--f-display);font-weight:600;font-size:19px;margin:0}
+.phead .en{font-family:var(--f-latin);font-weight:700;font-size:13px;color:var(--muted)}
+.phead .sp{flex:1}
+.gsec{display:grid;gap:12px}
+.gsec h3{display:flex;align-items:center;gap:8px;margin:0;font-family:var(--f-display);font-weight:500;font-size:15.5px;color:var(--muted)}
+.gsec h3 .fi{width:22px;height:22px}
+.gsec h3 .n{font-family:var(--f-latin);font-weight:800;font-size:12px}
+.gsec h3 .tools{margin-left:auto;display:flex}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,158px),1fr));gap:14px}
+.tile{position:relative;display:grid;justify-items:center;align-content:start;gap:8px;text-align:center;padding:18px 12px 16px;border-radius:20px;background:hsl(var(--h) 85% var(--tb));border:1px solid hsl(var(--h) 60% var(--tline));text-decoration:none;color:var(--ink);min-width:0;transition:transform .18s,box-shadow .18s}
+a.tile:hover{transform:translateY(-3px);box-shadow:var(--shadow-hi)}
+.tile .fi{width:56px;height:56px;transition:transform .18s}
+a.tile:hover .fi{transform:scale(1.08)}
+.tile .ph{width:64px;height:56px;border-radius:12px;object-fit:cover}
+.tile b{font-family:var(--f-display);font-weight:500;font-size:14.5px;line-height:1.35;overflow-wrap:anywhere}
+.tile .d{font-size:12.5px;color:var(--muted);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tile.nolink{background:var(--surface);border-style:dashed}
+.tile.nolink .fi{opacity:.55}
+.tile .soon{font-size:11.5px;color:var(--muted);background:var(--sunk);padding:1px 9px;border-radius:999px}
+.tile .ed{position:absolute;top:6px;right:6px;left:6px;display:flex;justify-content:space-between}
+.tile .ed button{border:0;background:var(--surface);border-radius:999px;width:28px;height:28px;display:grid;place-items:center;cursor:pointer;color:var(--muted);box-shadow:var(--shadow)}
+.tile .ed button:hover{color:var(--rose-deep)}
+.tile .ed svg,.ib svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.tile.edit{padding-top:40px}
+.addtile{border:2px dashed var(--line);border-radius:20px;background:transparent;color:var(--muted);cursor:pointer;display:grid;place-items:center;align-content:center;gap:4px;min-height:140px;font-family:var(--f-display);font-size:14px}
+.addtile:hover{border-color:var(--rose);color:var(--rose-deep)}
+.addtile svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round}
+.empty{border:2px dashed var(--line);border-radius:20px;padding:26px;color:var(--muted);text-align:center}
+
+/* today + calendar */
+.duo{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:18px;align-items:start}
+.cls{display:grid;gap:4px}
+.crow{display:grid;grid-template-columns:62px 72px minmax(0,1fr);gap:10px;align-items:center;padding:9px 12px;border-radius:14px}
+.crow:nth-child(odd){background:var(--sunk)}
+.crow .tm{font-family:var(--f-latin);font-weight:700;font-variant-numeric:tabular-nums;color:var(--muted);font-size:14px}
+.crow .cl{font-family:var(--f-display);font-weight:500}
+.crow .sj{min-width:0;font-size:14.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.crow .sj small{color:var(--muted)}
+.crow.act .cl,.crow.act .sj{color:var(--muted)}
+.crow.now{background:var(--rose-soft)!important;box-shadow:inset 3px 0 0 var(--rose)}
+.crow.now .tm{color:var(--rose-deep)}
+.note{font-size:13px;color:var(--muted);margin:0}
+.cal{display:grid;gap:10px}
+.calh{display:flex;align-items:center;gap:8px}
+.calh b{font-family:var(--f-display);font-weight:600;font-size:17px;flex:1}
+.ib{border:0;background:var(--sunk);width:32px;height:32px;border-radius:50%;display:grid;place-items:center;cursor:pointer;color:var(--muted)}
+.ib:hover{color:var(--rose-deep);background:var(--rose-soft)}
+.grid7{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+.grid7 .dn{font-size:12px;color:var(--muted);font-family:var(--f-display);padding-bottom:4px}
+.grid7 .dn:first-child,.grid7 .dn:last-child{color:var(--rose)}
+.grid7 .dd{font-family:var(--f-latin);font-weight:700;font-size:13.5px;font-variant-numeric:tabular-nums;padding:7px 0;border-radius:10px}
+.grid7 .dd.wk{color:var(--muted)}
+.grid7 .dd.td{background:var(--today);color:#fff}
+
+/* buttons */
+.btn{border:1px solid var(--line);background:var(--surface);padding:9px 16px;border-radius:999px;cursor:pointer;font-family:var(--f-display);font-weight:500;display:inline-flex;align-items:center;gap:6px;font-size:14px;color:var(--ink);box-shadow:var(--shadow)}
+.btn:hover{border-color:var(--rose)}
+.btn.pri{background:var(--rose);border-color:var(--rose);color:var(--rose-ink)}
+.btn.on{background:var(--rose-deep);border-color:var(--rose-deep);color:var(--rose-ink)}
+.btn.ghost{border-color:transparent;background:transparent;box-shadow:none;color:var(--muted);padding:6px 10px}
+.btn.ghost:hover{background:var(--sunk);color:var(--ink)}
+.btn.danger{color:var(--bad);border-color:var(--bad);box-shadow:none}
+.btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+
+/* save bar + modal */
+.savebar{position:fixed;left:0;right:0;bottom:0;z-index:20;padding-top:12px;padding-bottom:calc(14px + env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;justify-content:center;pointer-events:none}
+.savebar>div{pointer-events:auto;background:var(--ink);color:var(--bg1);border-radius:999px;padding:8px 8px 8px 22px;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow-hi);flex-wrap:wrap;max-width:100%}
+.savebar .btn{background:var(--rose);color:var(--rose-ink);border-color:var(--rose);box-shadow:none}
+.savebar .btn.ghost{background:transparent;border-color:transparent;color:var(--bg1)}
+.modal{position:fixed;inset:0;z-index:30;background:rgba(60,40,60,.45);display:grid;place-items:center;overflow-y:auto;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.dlg{background:var(--surface);border-radius:26px;width:min(580px,100%);padding:24px;display:grid;gap:14px;box-shadow:var(--shadow-hi)}
+.dlg h3{font-family:var(--f-display);font-weight:600;font-size:19px;margin:0}
+.fld{display:grid;gap:6px}
+.fld>label{font-size:13.5px;font-weight:600;color:var(--muted)}
+.fld input,.fld select,.fld textarea{border:1px solid var(--line);border-radius:14px;padding:10px 13px;background:var(--sunk);width:100%;min-width:0}
+.fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--rose);outline:none;box-shadow:0 0 0 3px var(--rose-soft)}
+.fld textarea{min-height:68px;resize:vertical}
+.err{color:var(--bad);font-size:13px}
+.picker{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:6px;max-height:200px;overflow-y:auto;padding:6px;border:1px solid var(--line);border-radius:14px;background:var(--sunk)}
+.picker button{border:2px solid transparent;background:var(--surface);border-radius:12px;padding:6px;cursor:pointer;display:grid;place-items:center}
+.picker button .fi{width:32px;height:32px}
+.picker button[aria-pressed="true"]{border-color:var(--rose)}
+.picker .txt{font-family:var(--f-display);font-size:12px;color:var(--muted);min-height:48px}
+.swatches{display:flex;gap:8px;flex-wrap:wrap}
+.swatches button{width:34px;height:34px;border-radius:50%;border:3px solid var(--surface);box-shadow:0 0 0 1px var(--line);cursor:pointer;background:hsl(var(--h) 85% 80%)}
+.swatches button[aria-pressed="true"]{box-shadow:0 0 0 3px hsl(var(--h) 60% 55%)}
+.upl{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.upl input{padding:6px;font-size:13px;border:0;background:none}
+.upl img{width:56px;height:40px;object-fit:cover;border-radius:8px}
+.btns{display:flex;gap:8px;justify-content:space-between;flex-wrap:wrap}
+.btns>div{display:flex;gap:8px;flex-wrap:wrap}
+
+@media (max-width:980px){
+  .wrap{grid-template-columns:1fr}
+  .side{position:static;padding:10px;display:flex;align-items:center;gap:10px;border-radius:20px}
+  .logo{display:flex;border:0;padding:0;gap:8px}
+  .logo .em{width:44px;height:44px;box-shadow:0 0 0 3px var(--rose-soft)}
+  .logo .em svg{width:34px;height:34px}
+  .logo small{display:none}
+  .nav{display:flex;overflow-x:auto;gap:4px;scrollbar-width:none;flex:1;min-width:0}
+  .nav button{flex:none;padding:8px 12px}
+  .nav .n{display:none}
+  .duo{grid-template-columns:1fr}
+}
+@media (max-width:560px){
+  .banner .veil{background:linear-gradient(180deg,rgba(255,246,250,.92) 0%,rgba(255,246,250,.75) 70%,rgba(255,246,250,.4) 100%)}
+  .banner .txt{padding:22px 20px}
+  .panel{padding:16px}
+  .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .search{flex:1 1 100%}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}a.tile:hover{transform:none}}
+</style>
+</head>
+<body>
+<script type="application/json" id="assets">{"times":[null,["08.50","09.40"],["09.40","10.30"],["10.30","11.20"],["11.20","12.10"],["12.10","13.00"],["13.00","13.50"],["13.50","14.40"],["14.40","15.30"],["15.30","16.20"]],"me":[[1,2,"อ23102","3/4","443"],[1,6,"อ32202","5/3Chi","134"],[1,7,"อ32202","5/5Eng","135"],[1,8,"~ติว ONET ม.3","",""],[2,1,"~ประชุมวิชาการ","",""],[2,2,"~ประชุมวิชาการ","",""],[2,5,"อ23102","3/8","447"],[2,6,"อ31208","4/4Eng","133"],[2,7,"อ31208","4/4Eng","133"],[2,8,"~ชุมนุม","",""],[3,1,"อ23102","3/8","447"],[3,2,"อ32202","5/5Eng","135"],[3,3,"อ32202","5/3Chi","134"],[3,7,"อ32202","5/6Math","117"],[3,8,"~บำเพ็ญประโยชน์ ม.4","",""],[4,3,"อ23102","3/4","443"],[4,5,"อ23102","3/8","447"],[4,7,"~ค้นคว้าอิสระ ม.4/4","4/4",""],[5,1,"อ23102","3/4","443"],[5,2,"อ32202","5/6Math","117"],[5,7,"~ค้นคว้าอิสระ ม.4/4","4/4",""]],"term":"2/2569","names":{"อ23102":"ภาษาอังกฤษพื้นฐาน","อ32202":"ภาษาอังกฤษเพิ่มเติม","อ31208":"ภาษาอังกฤษเพิ่มเติม"},"blossom":"\u003csvg class=\"art\" viewBox=\"0 0 1000 300\" preserveAspectRatio=\"xMaxYMid slice\" aria-hidden=\"true\">\u003cdefs>\u003clinearGradient id=\"sky\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\">\u003cstop offset=\"0\" stop-color=\"#fbe3ee\"/>\u003cstop offset=\"1\" stop-color=\"#eef0fb\"/>\u003c/linearGradient>\u003c/defs>\u003crect width=\"1000\" height=\"300\" fill=\"url(#sky)\"/>\u003ccircle cx=\"760\" cy=\"70\" r=\"46\" fill=\"#fff4d6\" opacity=\".9\"/>\u003cpath d=\"M0 250 Q250 215 520 240 T1000 228 V300 H0z\" fill=\"#e7f3e9\"/>\u003cg transform=\"translate(560 92)\">\u003crect x=\"0\" y=\"70\" width=\"330\" height=\"120\" rx=\"6\" fill=\"#fffaf6\" stroke=\"#e7c9d6\" stroke-width=\"2\"/>\u003cpath d=\"M-14 74 165 8 344 74z\" fill=\"#f2a7c0\" stroke=\"#d9849f\" stroke-width=\"2\" stroke-linejoin=\"round\"/>\u003crect x=\"120\" y=\"40\" width=\"90\" height=\"150\" fill=\"#fff\" stroke=\"#e7c9d6\" stroke-width=\"2\"/>\u003cpath d=\"M110 44 165 6 220 44z\" fill=\"#ee93b2\" stroke=\"#d9849f\" stroke-width=\"2\" stroke-linejoin=\"round\"/>\u003ccircle cx=\"165\" cy=\"70\" r=\"12\" fill=\"#fde3ec\" stroke=\"#d9849f\" stroke-width=\"2\"/>\u003crect x=\"148\" y=\"140\" width=\"34\" height=\"50\" rx=\"16\" fill=\"#f7d2df\" stroke=\"#d9849f\" stroke-width=\"2\"/>\u003crect x=\"16\" y=\"95\" width=\"14\" height=\"20\" rx=\"3\" fill=\"#cfe3f6\" stroke=\"#b9cfe6\" stroke-width=\"1.5\"/>\u003crect x=\"40\" y=\"95\" width=\"14\" height=\"20\" rx=\"3\" fill=\"#cfe3f6\" stroke=\"#b9cfe6\" stroke-width=\"1.5\"/>\u003crect x=\"64\" y=\"95\" width=\"14\" height=\"20\" rx=\"3\" fill=\"#cfe3f6\" stroke=\"#b9cfe6\" stroke-width=\"1.5\"/>\u003crect x=\"88\" y=\"95\" width=\"14\" height=\"20\" rx=\"3\" fill=\"#cfe3f6\" stroke=\"#b9cfe6\" stroke-width=\"1.5\"/>\u003crect x=\"226\" y=\"95\" width=\"14\" height=\"20\" rx=\"3\" fill=\"#cfe3f6\" stroke=\"#b9cfe6\" stroke-width=\"1.5\"/>\u003crect x=\"250\" y=\"95\" width=\"14\" height=\"20\" rx=\"3\" fill=\"#cfe3f6\" stroke=\"#b9cfe6\" stroke-width=\"1.5\"/>\u003crect x=\"274\" y=\"95\" width=\"14\" height=\"20\" rx=\"3\" fill=\"#cfe3f6\" stroke=\"#b9cfe6\" stroke-width=\"1.5\"/>\u003crect x=\"298\" y=\"95\" width=\"14\" height=\"20\" rx=\"3\" fill=\"#cfe3f6\" stroke=\"#b9cfe6\" stroke-width=\"1.5\"/>\u003crect x=\"16\" y=\"135\" width=\"14\" height=\"20\" rx=\"3\" fill=\"#cfe3f6\" stroke=\"#b9cfe6\" stroke-width=\"1.5\"/>\u003crect x=\"40\" y=\"135\" width=\"14\" height=\"20\" rx=\"3\" fill=\"#cfe3f6\" stroke=\"#b9cfe6\" stroke-width=\"1.5\"/>\u003crect x=\"64\" y=\"135\" width=\"14\" height=\"20\" rx=\"3\" fill=\"#cfe3f6\" stroke=\"#b9cfe6\" stroke-width=\"1.5\"/>\u003crect x=\"88\" y=\"135\" width=\"14\" height=\"20\" rx=\"3\" fill=\"#cfe3f6\" stroke=\"#b9cfe6\" stroke-width=\"1.5\"/>\u003crect x=\"226\" y=\"135\" width=\"14\" height=\"20\" rx=\"3\" fill=\"#cfe3f6\" stroke=\"#b9cfe6\" stroke-width=\"1.5\"/>\u003crect x=\"250\" y=\"135\" width=\"14\" height=\"20\" rx=\"3\" fill=\"#cfe3f6\" stroke=\"#b9cfe6\" stroke-width=\"1.5\"/>\u003crect x=\"274\" y=\"135\" width=\"14\" height=\"20\" rx=\"3\" fill=\"#cfe3f6\" stroke=\"#b9cfe6\" stroke-width=\"1.5\"/>\u003crect x=\"298\" y=\"135\" width=\"14\" height=\"20\" rx=\"3\" fill=\"#cfe3f6\" stroke=\"#b9cfe6\" stroke-width=\"1.5\"/>\u003crect x=\"132\" y=\"96\" width=\"10\" height=\"34\" rx=\"3\" fill=\"#cfe3f6\" stroke=\"#b9cfe6\" stroke-width=\"1.5\"/>\u003crect x=\"192\" y=\"96\" width=\"10\" height=\"34\" rx=\"3\" fill=\"#cfe3f6\" stroke=\"#b9cfe6\" stroke-width=\"1.5\"/>\u003cpath d=\"M-20 190h370\" stroke=\"#e7c9d6\" stroke-width=\"3\"/>\u003c/g>\u003cpath d=\"M520 220 C514 180 530 160 520 140\" stroke=\"#b98a78\" stroke-width=\"9\" fill=\"none\" stroke-linecap=\"round\"/>\u003ccircle cx=\"492\" cy=\"117\" r=\"26\" fill=\"#f9c6d8\" opacity=\".95\"/>\u003ccircle cx=\"571\" cy=\"113\" r=\"25\" fill=\"#fde0ea\" opacity=\".95\"/>\u003ccircle cx=\"474\" cy=\"113\" r=\"23\" fill=\"#f6b3cb\" opacity=\".95\"/>\u003ccircle cx=\"455\" cy=\"138\" r=\"28\" fill=\"#f9c6d8\" opacity=\".95\"/>\u003ccircle cx=\"592\" cy=\"154\" r=\"25\" fill=\"#f9c6d8\" opacity=\".95\"/>\u003ccircle cx=\"532\" cy=\"136\" r=\"30\" fill=\"#f9c6d8\" opacity=\".95\"/>\u003ccircle cx=\"529\" cy=\"116\" r=\"23\" fill=\"#fde0ea\" opacity=\".95\"/>\u003ccircle cx=\"459\" cy=\"129\" r=\"28\" fill=\"#f6b3cb\" opacity=\".95\"/>\u003ccircle cx=\"456\" cy=\"149\" r=\"20\" fill=\"#f9c6d8\" opacity=\".95\"/>\u003ccircle cx=\"528\" cy=\"111\" r=\"19\" fill=\"#f6b3cb\" opacity=\".95\"/>\u003ccircle cx=\"519\" cy=\"146\" r=\"27\" fill=\"#f3a5c0\" opacity=\".95\"/>\u003ccircle cx=\"534\" cy=\"140\" r=\"22\" fill=\"#f6b3cb\" opacity=\".95\"/>\u003ccircle cx=\"552\" cy=\"125\" r=\"25\" fill=\"#fde0ea\" opacity=\".95\"/>\u003ccircle cx=\"519\" cy=\"132\" r=\"23\" fill=\"#fde0ea\" opacity=\".95\"/>\u003ccircle cx=\"597\" cy=\"115\" r=\"23\" fill=\"#fbd5e3\" opacity=\".95\"/>\u003ccircle cx=\"464\" cy=\"143\" r=\"18\" fill=\"#f9c6d8\" opacity=\".95\"/>\u003ccircle cx=\"562\" cy=\"150\" r=\"29\" fill=\"#fbd5e3\" opacity=\".95\"/>\u003ccircle cx=\"494\" cy=\"133\" r=\"24\" fill=\"#f3a5c0\" opacity=\".95\"/>\u003ccircle cx=\"451\" cy=\"113\" r=\"21\" fill=\"#f9c6d8\" opacity=\".95\"/>\u003ccircle cx=\"450\" cy=\"159\" r=\"26\" fill=\"#f3a5c0\" opacity=\".95\"/>\u003ccircle cx=\"486\" cy=\"135\" r=\"26\" fill=\"#f9c6d8\" opacity=\".95\"/>\u003ccircle cx=\"591\" cy=\"133\" r=\"25\" fill=\"#f3a5c0\" opacity=\".95\"/>\u003ccircle cx=\"449\" cy=\"164\" r=\"20\" fill=\"#f6b3cb\" opacity=\".95\"/>\u003ccircle cx=\"504\" cy=\"176\" r=\"24\" fill=\"#f6b3cb\" opacity=\".95\"/>\u003ccircle cx=\"512\" cy=\"148\" r=\"29\" fill=\"#f3a5c0\" opacity=\".95\"/>\u003ccircle cx=\"578\" cy=\"127\" r=\"23\" fill=\"#fbd5e3\" opacity=\".95\"/>\u003ccircle cx=\"549.0\" cy=\"133.0\" r=\"3.7\" fill=\"#fff\"/>\u003ccircle cx=\"552.8\" cy=\"135.8\" r=\"3.7\" fill=\"#fff\"/>\u003ccircle cx=\"551.4\" cy=\"140.2\" r=\"3.7\" fill=\"#fff\"/>\u003ccircle cx=\"546.6\" cy=\"140.2\" r=\"3.7\" fill=\"#fff\"/>\u003ccircle cx=\"545.2\" cy=\"135.8\" r=\"3.7\" fill=\"#fff\"/>\u003ccircle cx=\"549\" cy=\"137\" r=\"1.9\" fill=\"#f6c453\"/>\u003ccircle cx=\"453.0\" cy=\"116.2\" r=\"4.4\" fill=\"#fff\"/>\u003ccircle cx=\"457.6\" cy=\"119.5\" r=\"4.4\" fill=\"#fff\"/>\u003ccircle cx=\"455.8\" cy=\"124.9\" r=\"4.4\" fill=\"#fff\"/>\u003ccircle cx=\"450.2\" cy=\"124.9\" r=\"4.4\" fill=\"#fff\"/>\u003ccircle cx=\"448.4\" cy=\"119.5\" r=\"4.4\" fill=\"#fff\"/>\u003ccircle cx=\"453\" cy=\"121\" r=\"2.2\" fill=\"#f6c453\"/>\u003ccircle cx=\"442.0\" cy=\"166.1\" r=\"3.6\" fill=\"#fff\"/>\u003ccircle cx=\"445.7\" cy=\"168.8\" r=\"3.6\" fill=\"#fff\"/>\u003ccircle cx=\"444.3\" cy=\"173.2\" r=\"3.6\" fill=\"#fff\"/>\u003ccircle cx=\"439.7\" cy=\"173.2\" r=\"3.6\" fill=\"#fff\"/>\u003ccircle cx=\"438.3\" cy=\"168.8\" r=\"3.6\" fill=\"#fff\"/>\u003ccircle cx=\"442\" cy=\"170\" r=\"1.8\" fill=\"#f6c453\"/>\u003ccircle cx=\"485.0\" cy=\"115.4\" r=\"4.2\" fill=\"#fff\"/>\u003ccircle cx=\"489.3\" cy=\"118.6\" r=\"4.2\" fill=\"#fff\"/>\u003ccircle cx=\"487.7\" cy=\"123.7\" r=\"4.2\" fill=\"#fff\"/>\u003ccircle cx=\"482.3\" cy=\"123.7\" r=\"4.2\" fill=\"#fff\"/>\u003ccircle cx=\"480.7\" cy=\"118.6\" r=\"4.2\" fill=\"#fff\"/>\u003ccircle cx=\"485\" cy=\"120\" r=\"2.1\" fill=\"#f6c453\"/>\u003ccircle cx=\"538.0\" cy=\"129.2\" r=\"3.5\" fill=\"#fff\"/>\u003ccircle cx=\"541.6\" cy=\"131.8\" r=\"3.5\" fill=\"#fff\"/>\u003ccircle cx=\"540.2\" cy=\"136.1\" r=\"3.5\" fill=\"#fff\"/>\u003ccircle cx=\"535.8\" cy=\"136.1\" r=\"3.5\" fill=\"#fff\"/>\u003ccircle cx=\"534.4\" cy=\"131.8\" r=\"3.5\" fill=\"#fff\"/>\u003ccircle cx=\"538\" cy=\"133\" r=\"1.8\" fill=\"#f6c453\"/>\u003ccircle cx=\"577.0\" cy=\"173.2\" r=\"4.4\" fill=\"#fff\"/>\u003ccircle cx=\"581.5\" cy=\"176.5\" r=\"4.4\" fill=\"#fff\"/>\u003ccircle cx=\"579.8\" cy=\"181.9\" r=\"4.4\" fill=\"#fff\"/>\u003ccircle cx=\"574.2\" cy=\"181.9\" r=\"4.4\" fill=\"#fff\"/>\u003ccircle cx=\"572.5\" cy=\"176.5\" r=\"4.4\" fill=\"#fff\"/>\u003ccircle cx=\"577\" cy=\"178\" r=\"2.2\" fill=\"#f6c453\"/>\u003ccircle cx=\"558.0\" cy=\"137.8\" r=\"4.7\" fill=\"#fff\"/>\u003ccircle cx=\"562.9\" cy=\"141.4\" r=\"4.7\" fill=\"#fff\"/>\u003ccircle cx=\"561.0\" cy=\"147.2\" r=\"4.7\" fill=\"#fff\"/>\u003ccircle cx=\"555.0\" cy=\"147.2\" r=\"4.7\" fill=\"#fff\"/>\u003ccircle cx=\"553.1\" cy=\"141.4\" r=\"4.7\" fill=\"#fff\"/>\u003ccircle cx=\"558\" cy=\"143\" r=\"2.4\" fill=\"#f6c453\"/>\u003ccircle cx=\"592.0\" cy=\"154.4\" r=\"4.2\" fill=\"#fff\"/>\u003ccircle cx=\"596.4\" cy=\"157.6\" r=\"4.2\" fill=\"#fff\"/>\u003ccircle cx=\"594.7\" cy=\"162.7\" r=\"4.2\" fill=\"#fff\"/>\u003ccircle cx=\"589.3\" cy=\"162.7\" r=\"4.2\" fill=\"#fff\"/>\u003ccircle cx=\"587.6\" cy=\"157.6\" r=\"4.2\" fill=\"#fff\"/>\u003ccircle cx=\"592\" cy=\"159\" r=\"2.1\" fill=\"#f6c453\"/>\u003ccircle cx=\"504.0\" cy=\"133.5\" r=\"4.1\" fill=\"#fff\"/>\u003ccircle cx=\"508.2\" cy=\"136.6\" r=\"4.1\" fill=\"#fff\"/>\u003ccircle cx=\"506.6\" cy=\"141.6\" r=\"4.1\" fill=\"#fff\"/>\u003ccircle cx=\"501.4\" cy=\"141.6\" r=\"4.1\" fill=\"#fff\"/>\u003ccircle cx=\"499.8\" cy=\"136.6\" r=\"4.1\" fill=\"#fff\"/>\u003ccircle cx=\"504\" cy=\"138\" r=\"2.1\" fill=\"#f6c453\"/>\u003ccircle cx=\"504.0\" cy=\"118.6\" r=\"4.9\" fill=\"#fff\"/>\u003ccircle cx=\"509.1\" cy=\"122.3\" r=\"4.9\" fill=\"#fff\"/>\u003ccircle cx=\"507.2\" cy=\"128.3\" r=\"4.9\" fill=\"#fff\"/>\u003ccircle cx=\"500.8\" cy=\"128.3\" r=\"4.9\" fill=\"#fff\"/>\u003ccircle cx=\"498.9\" cy=\"122.3\" r=\"4.9\" fill=\"#fff\"/>\u003ccircle cx=\"504\" cy=\"124\" r=\"2.5\" fill=\"#f6c453\"/>\u003ccircle cx=\"511.0\" cy=\"113.3\" r=\"4.3\" fill=\"#fff\"/>\u003ccircle cx=\"515.5\" cy=\"116.6\" r=\"4.3\" fill=\"#fff\"/>\u003ccircle cx=\"513.8\" cy=\"121.8\" r=\"4.3\" fill=\"#fff\"/>\u003ccircle cx=\"508.2\" cy=\"121.8\" r=\"4.3\" fill=\"#fff\"/>\u003ccircle cx=\"506.5\" cy=\"116.6\" r=\"4.3\" fill=\"#fff\"/>\u003ccircle cx=\"511\" cy=\"118\" r=\"2.2\" fill=\"#f6c453\"/>\u003ccircle cx=\"456.0\" cy=\"146.4\" r=\"4.2\" fill=\"#fff\"/>\u003ccircle cx=\"460.3\" cy=\"149.6\" r=\"4.2\" fill=\"#fff\"/>\u003ccircle cx=\"458.7\" cy=\"154.7\" r=\"4.2\" fill=\"#fff\"/>\u003ccircle cx=\"453.3\" cy=\"154.7\" r=\"4.2\" fill=\"#fff\"/>\u003ccircle cx=\"451.7\" cy=\"149.6\" r=\"4.2\" fill=\"#fff\"/>\u003ccircle cx=\"456\" cy=\"151\" r=\"2.1\" fill=\"#f6c453\"/>\u003ccircle cx=\"592.0\" cy=\"150.3\" r=\"3.4\" fill=\"#fff\"/>\u003ccircle cx=\"595.5\" cy=\"152.8\" r=\"3.4\" fill=\"#fff\"/>\u003ccircle cx=\"594.2\" cy=\"157.0\" r=\"3.4\" fill=\"#fff\"/>\u003ccircle cx=\"589.8\" cy=\"157.0\" r=\"3.4\" fill=\"#fff\"/>\u003ccircle cx=\"588.5\" cy=\"152.8\" r=\"3.4\" fill=\"#fff\"/>\u003ccircle cx=\"592\" cy=\"154\" r=\"1.7\" fill=\"#f6c453\"/>\u003cpath d=\"M960 210 C954 170 970 150 960 130\" stroke=\"#b98a78\" stroke-width=\"9\" fill=\"none\" stroke-linecap=\"round\"/>\u003ccircle cx=\"910\" cy=\"124\" r=\"26\" fill=\"#fbd5e3\" opacity=\".95\"/>\u003ccircle cx=\"977\" cy=\"132\" r=\"19\" fill=\"#f3a5c0\" opacity=\".95\"/>\u003ccircle cx=\"1044\" cy=\"131\" r=\"24\" fill=\"#f9c6d8\" opacity=\".95\"/>\u003ccircle cx=\"899\" cy=\"154\" r=\"27\" fill=\"#f3a5c0\" opacity=\".95\"/>\u003ccircle cx=\"1016\" cy=\"106\" r=\"18\" fill=\"#fde0ea\" opacity=\".95\"/>\u003ccircle cx=\"936\" cy=\"149\" r=\"29\" fill=\"#fde0ea\" opacity=\".95\"/>\u003ccircle cx=\"926\" cy=\"145\" r=\"19\" fill=\"#fbd5e3\" opacity=\".95\"/>\u003ccircle cx=\"963\" cy=\"167\" r=\"22\" fill=\"#f6b3cb\" opacity=\".95\"/>\u003ccircle cx=\"966\" cy=\"156\" r=\"22\" fill=\"#f6b3cb\" opacity=\".95\"/>\u003ccircle cx=\"979\" cy=\"157\" r=\"27\" fill=\"#f6b3cb\" opacity=\".95\"/>\u003ccircle cx=\"1012\" cy=\"159\" r=\"27\" fill=\"#f6b3cb\" opacity=\".95\"/>\u003ccircle cx=\"909\" cy=\"133\" r=\"27\" fill=\"#f9c6d8\" opacity=\".95\"/>\u003ccircle cx=\"1009\" cy=\"131\" r=\"20\" fill=\"#fde0ea\" opacity=\".95\"/>\u003ccircle cx=\"1038\" cy=\"129\" r=\"29\" fill=\"#fbd5e3\" opacity=\".95\"/>\u003ccircle cx=\"1037\" cy=\"123\" r=\"21\" fill=\"#f6b3cb\" opacity=\".95\"/>\u003ccircle cx=\"955\" cy=\"121\" r=\"24\" fill=\"#fde0ea\" opacity=\".95\"/>\u003ccircle cx=\"1018\" cy=\"132\" r=\"26\" fill=\"#f9c6d8\" opacity=\".95\"/>\u003ccircle cx=\"1017\" cy=\"103\" r=\"23\" fill=\"#f6b3cb\" opacity=\".95\"/>\u003ccircle cx=\"956\" cy=\"108\" r=\"27\" fill=\"#fbd5e3\" opacity=\".95\"/>\u003ccircle cx=\"890\" cy=\"170\" r=\"27\" fill=\"#f3a5c0\" opacity=\".95\"/>\u003ccircle cx=\"943\" cy=\"170\" r=\"27\" fill=\"#f6b3cb\" opacity=\".95\"/>\u003ccircle cx=\"1044\" cy=\"95\" r=\"25\" fill=\"#f3a5c0\" opacity=\".95\"/>\u003ccircle cx=\"1012\" cy=\"105\" r=\"28\" fill=\"#f3a5c0\" opacity=\".95\"/>\u003ccircle cx=\"987\" cy=\"122\" r=\"25\" fill=\"#f6b3cb\" opacity=\".95\"/>\u003ccircle cx=\"879\" cy=\"158\" r=\"27\" fill=\"#f9c6d8\" opacity=\".95\"/>\u003ccircle cx=\"965\" cy=\"169\" r=\"23\" fill=\"#f6b3cb\" opacity=\".95\"/>\u003ccircle cx=\"1015.0\" cy=\"109.9\" r=\"3.7\" fill=\"#fff\"/>\u003ccircle cx=\"1018.9\" cy=\"112.7\" r=\"3.7\" fill=\"#fff\"/>\u003ccircle cx=\"1017.4\" cy=\"117.3\" r=\"3.7\" fill=\"#fff\"/>\u003ccircle cx=\"1012.6\" cy=\"117.3\" r=\"3.7\" fill=\"#fff\"/>\u003ccircle cx=\"1011.1\" cy=\"112.7\" r=\"3.7\" fill=\"#fff\"/>\u003ccircle cx=\"1015\" cy=\"114\" r=\"1.9\" fill=\"#f6c453\"/>\u003ccircle cx=\"925.0\" cy=\"111.3\" r=\"4.3\" fill=\"#fff\"/>\u003ccircle cx=\"929.4\" cy=\"114.6\" r=\"4.3\" fill=\"#fff\"/>\u003ccircle cx=\"927.7\" cy=\"119.8\" r=\"4.3\" fill=\"#fff\"/>\u003ccircle cx=\"922.3\" cy=\"119.8\" r=\"4.3\" fill=\"#fff\"/>\u003ccircle cx=\"920.6\" cy=\"114.6\" r=\"4.3\" fill=\"#fff\"/>\u003ccircle cx=\"925\" cy=\"116\" r=\"2.2\" fill=\"#f6c453\"/>\u003ccircle cx=\"919.0\" cy=\"126.2\" r=\"3.5\" fill=\"#fff\"/>\u003ccircle cx=\"922.6\" cy=\"128.8\" r=\"3.5\" fill=\"#fff\"/>\u003ccircle cx=\"921.3\" cy=\"133.1\" r=\"3.5\" fill=\"#fff\"/>\u003ccircle cx=\"916.7\" cy=\"133.1\" r=\"3.5\" fill=\"#fff\"/>\u003ccircle cx=\"915.4\" cy=\"128.8\" r=\"3.5\" fill=\"#fff\"/>\u003ccircle cx=\"919\" cy=\"130\" r=\"1.8\" fill=\"#f6c453\"/>\u003ccircle cx=\"1030.0\" cy=\"120.6\" r=\"4.1\" fill=\"#fff\"/>\u003ccircle cx=\"1034.2\" cy=\"123.6\" r=\"4.1\" fill=\"#fff\"/>\u003ccircle cx=\"1032.6\" cy=\"128.6\" r=\"4.1\" fill=\"#fff\"/>\u003ccircle cx=\"1027.4\" cy=\"128.6\" r=\"4.1\" fill=\"#fff\"/>\u003ccircle cx=\"1025.8\" cy=\"123.6\" r=\"4.1\" fill=\"#fff\"/>\u003ccircle cx=\"1030\" cy=\"125\" r=\"2.1\" fill=\"#f6c453\"/>\u003ccircle cx=\"974.0\" cy=\"162.6\" r=\"4.0\" fill=\"#fff\"/>\u003ccircle cx=\"978.1\" cy=\"165.7\" r=\"4.0\" fill=\"#fff\"/>\u003ccircle cx=\"976.6\" cy=\"170.5\" r=\"4.0\" fill=\"#fff\"/>\u003ccircle cx=\"971.4\" cy=\"170.5\" r=\"4.0\" fill=\"#fff\"/>\u003ccircle cx=\"969.9\" cy=\"165.7\" r=\"4.0\" fill=\"#fff\"/>\u003ccircle cx=\"974\" cy=\"167\" r=\"2.0\" fill=\"#f6c453\"/>\u003ccircle cx=\"1031.0\" cy=\"131.4\" r=\"4.2\" fill=\"#fff\"/>\u003ccircle cx=\"1035.3\" cy=\"134.6\" r=\"4.2\" fill=\"#fff\"/>\u003ccircle cx=\"1033.7\" cy=\"139.7\" r=\"4.2\" fill=\"#fff\"/>\u003ccircle cx=\"1028.3\" cy=\"139.7\" r=\"4.2\" fill=\"#fff\"/>\u003ccircle cx=\"1026.7\" cy=\"134.6\" r=\"4.2\" fill=\"#fff\"/>\u003ccircle cx=\"1031\" cy=\"136\" r=\"2.1\" fill=\"#f6c453\"/>\u003ccircle cx=\"964.0\" cy=\"94.6\" r=\"4.0\" fill=\"#fff\"/>\u003ccircle cx=\"968.2\" cy=\"97.6\" r=\"4.0\" fill=\"#fff\"/>\u003ccircle cx=\"966.6\" cy=\"102.6\" r=\"4.0\" fill=\"#fff\"/>\u003ccircle cx=\"961.4\" cy=\"102.6\" r=\"4.0\" fill=\"#fff\"/>\u003ccircle cx=\"959.8\" cy=\"97.6\" r=\"4.0\" fill=\"#fff\"/>\u003ccircle cx=\"964\" cy=\"99\" r=\"2.0\" fill=\"#f6c453\"/>\u003ccircle cx=\"906.0\" cy=\"93.0\" r=\"4.6\" fill=\"#fff\"/>\u003ccircle cx=\"910.8\" cy=\"96.4\" r=\"4.6\" fill=\"#fff\"/>\u003ccircle cx=\"909.0\" cy=\"102.1\" r=\"4.6\" fill=\"#fff\"/>\u003ccircle cx=\"903.0\" cy=\"102.1\" r=\"4.6\" fill=\"#fff\"/>\u003ccircle cx=\"901.2\" cy=\"96.4\" r=\"4.6\" fill=\"#fff\"/>\u003ccircle cx=\"906\" cy=\"98\" r=\"2.4\" fill=\"#f6c453\"/>\u003ccircle cx=\"904.0\" cy=\"129.1\" r=\"4.5\" fill=\"#fff\"/>\u003ccircle cx=\"908.7\" cy=\"132.5\" r=\"4.5\" fill=\"#fff\"/>\u003ccircle cx=\"906.9\" cy=\"138.0\" r=\"4.5\" fill=\"#fff\"/>\u003ccircle cx=\"901.1\" cy=\"138.0\" r=\"4.5\" fill=\"#fff\"/>\u003ccircle cx=\"899.3\" cy=\"132.5\" r=\"4.5\" fill=\"#fff\"/>\u003ccircle cx=\"904\" cy=\"134\" r=\"2.3\" fill=\"#f6c453\"/>\u003ccircle cx=\"970.0\" cy=\"117.5\" r=\"4.2\" fill=\"#fff\"/>\u003ccircle cx=\"974.3\" cy=\"120.6\" r=\"4.2\" fill=\"#fff\"/>\u003ccircle cx=\"972.7\" cy=\"125.7\" r=\"4.2\" fill=\"#fff\"/>\u003ccircle cx=\"967.3\" cy=\"125.7\" r=\"4.2\" fill=\"#fff\"/>\u003ccircle cx=\"965.7\" cy=\"120.6\" r=\"4.2\" fill=\"#fff\"/>\u003ccircle cx=\"970\" cy=\"122\" r=\"2.1\" fill=\"#f6c453\"/>\u003ccircle cx=\"969.0\" cy=\"153.2\" r=\"3.5\" fill=\"#fff\"/>\u003ccircle cx=\"972.6\" cy=\"155.8\" r=\"3.5\" fill=\"#fff\"/>\u003ccircle cx=\"971.2\" cy=\"160.1\" r=\"3.5\" fill=\"#fff\"/>\u003ccircle cx=\"966.8\" cy=\"160.1\" r=\"3.5\" fill=\"#fff\"/>\u003ccircle cx=\"965.4\" cy=\"155.8\" r=\"3.5\" fill=\"#fff\"/>\u003ccircle cx=\"969\" cy=\"157\" r=\"1.8\" fill=\"#f6c453\"/>\u003ccircle cx=\"970.0\" cy=\"112.9\" r=\"3.8\" fill=\"#fff\"/>\u003ccircle cx=\"973.9\" cy=\"115.7\" r=\"3.8\" fill=\"#fff\"/>\u003ccircle cx=\"972.4\" cy=\"120.3\" r=\"3.8\" fill=\"#fff\"/>\u003ccircle cx=\"967.6\" cy=\"120.3\" r=\"3.8\" fill=\"#fff\"/>\u003ccircle cx=\"966.1\" cy=\"115.7\" r=\"3.8\" fill=\"#fff\"/>\u003ccircle cx=\"970\" cy=\"117\" r=\"1.9\" fill=\"#f6c453\"/>\u003ccircle cx=\"1006.0\" cy=\"131.4\" r=\"4.2\" fill=\"#fff\"/>\u003ccircle cx=\"1010.4\" cy=\"134.6\" r=\"4.2\" fill=\"#fff\"/>\u003ccircle cx=\"1008.7\" cy=\"139.7\" r=\"4.2\" fill=\"#fff\"/>\u003ccircle cx=\"1003.3\" cy=\"139.7\" r=\"4.2\" fill=\"#fff\"/>\u003ccircle cx=\"1001.6\" cy=\"134.6\" r=\"4.2\" fill=\"#fff\"/>\u003ccircle cx=\"1006\" cy=\"136\" r=\"2.2\" fill=\"#f6c453\"/>\u003cpath d=\"M440 285 C434 245 450 225 440 205\" stroke=\"#b98a78\" stroke-width=\"9\" fill=\"none\" stroke-linecap=\"round\"/>\u003ccircle cx=\"463\" cy=\"229\" r=\"23\" fill=\"#fde0ea\" opacity=\".95\"/>\u003ccircle cx=\"483\" cy=\"216\" r=\"20\" fill=\"#fbd5e3\" opacity=\".95\"/>\u003ccircle cx=\"436\" cy=\"213\" r=\"24\" fill=\"#f6b3cb\" opacity=\".95\"/>\u003ccircle cx=\"458\" cy=\"228\" r=\"29\" fill=\"#fbd5e3\" opacity=\".95\"/>\u003ccircle cx=\"478\" cy=\"228\" r=\"20\" fill=\"#f3a5c0\" opacity=\".95\"/>\u003ccircle cx=\"407\" cy=\"195\" r=\"23\" fill=\"#f9c6d8\" opacity=\".95\"/>\u003ccircle cx=\"455\" cy=\"209\" r=\"21\" fill=\"#fbd5e3\" opacity=\".95\"/>\u003ccircle cx=\"466\" cy=\"229\" r=\"20\" fill=\"#fbd5e3\" opacity=\".95\"/>\u003ccircle cx=\"408\" cy=\"228\" r=\"30\" fill=\"#f6b3cb\" opacity=\".95\"/>\u003ccircle cx=\"462\" cy=\"194\" r=\"29\" fill=\"#f6b3cb\" opacity=\".95\"/>\u003ccircle cx=\"484.0\" cy=\"222.1\" r=\"3.6\" fill=\"#fff\"/>\u003ccircle cx=\"487.7\" cy=\"224.8\" r=\"3.6\" fill=\"#fff\"/>\u003ccircle cx=\"486.3\" cy=\"229.1\" r=\"3.6\" fill=\"#fff\"/>\u003ccircle cx=\"481.7\" cy=\"229.1\" r=\"3.6\" fill=\"#fff\"/>\u003ccircle cx=\"480.3\" cy=\"224.8\" r=\"3.6\" fill=\"#fff\"/>\u003ccircle cx=\"484\" cy=\"226\" r=\"1.8\" fill=\"#f6c453\"/>\u003ccircle cx=\"434.0\" cy=\"208.8\" r=\"3.9\" fill=\"#fff\"/>\u003ccircle cx=\"438.0\" cy=\"211.7\" r=\"3.9\" fill=\"#fff\"/>\u003ccircle cx=\"436.5\" cy=\"216.4\" r=\"3.9\" fill=\"#fff\"/>\u003ccircle cx=\"431.5\" cy=\"216.4\" r=\"3.9\" fill=\"#fff\"/>\u003ccircle cx=\"430.0\" cy=\"211.7\" r=\"3.9\" fill=\"#fff\"/>\u003ccircle cx=\"434\" cy=\"213\" r=\"2.0\" fill=\"#f6c453\"/>\u003ccircle cx=\"413.0\" cy=\"200.1\" r=\"4.5\" fill=\"#fff\"/>\u003ccircle cx=\"417.7\" cy=\"203.5\" r=\"4.5\" fill=\"#fff\"/>\u003ccircle cx=\"415.9\" cy=\"209.0\" r=\"4.5\" fill=\"#fff\"/>\u003ccircle cx=\"410.1\" cy=\"209.0\" r=\"4.5\" fill=\"#fff\"/>\u003ccircle cx=\"408.3\" cy=\"203.5\" r=\"4.5\" fill=\"#fff\"/>\u003ccircle cx=\"413\" cy=\"205\" r=\"2.3\" fill=\"#f6c453\"/>\u003ccircle cx=\"397.0\" cy=\"210.6\" r=\"4.0\" fill=\"#fff\"/>\u003ccircle cx=\"401.2\" cy=\"213.6\" r=\"4.0\" fill=\"#fff\"/>\u003ccircle cx=\"399.6\" cy=\"218.6\" r=\"4.0\" fill=\"#fff\"/>\u003ccircle cx=\"394.4\" cy=\"218.6\" r=\"4.0\" fill=\"#fff\"/>\u003ccircle cx=\"392.8\" cy=\"213.6\" r=\"4.0\" fill=\"#fff\"/>\u003ccircle cx=\"397\" cy=\"215\" r=\"2.0\" fill=\"#f6c453\"/>\u003ccircle cx=\"397.0\" cy=\"201.3\" r=\"4.3\" fill=\"#fff\"/>\u003ccircle cx=\"401.5\" cy=\"204.5\" r=\"4.3\" fill=\"#fff\"/>\u003ccircle cx=\"399.8\" cy=\"209.8\" r=\"4.3\" fill=\"#fff\"/>\u003ccircle cx=\"394.2\" cy=\"209.8\" r=\"4.3\" fill=\"#fff\"/>\u003ccircle cx=\"392.5\" cy=\"204.5\" r=\"4.3\" fill=\"#fff\"/>\u003ccircle cx=\"397\" cy=\"206\" r=\"2.2\" fill=\"#f6c453\"/>\u003cellipse cx=\"698\" cy=\"37\" rx=\"5\" ry=\"3\" fill=\"#f6b3cb\" transform=\"rotate(26 698 37)\"/>\u003cellipse cx=\"432\" cy=\"93\" rx=\"5\" ry=\"3\" fill=\"#f6b3cb\" transform=\"rotate(69 432 93)\"/>\u003cellipse cx=\"849\" cy=\"241\" rx=\"5\" ry=\"3\" fill=\"#fbd5e3\" transform=\"rotate(103 849 241)\"/>\u003cellipse cx=\"473\" cy=\"268\" rx=\"5\" ry=\"3\" fill=\"#fde0ea\" transform=\"rotate(126 473 268)\"/>\u003cellipse cx=\"814\" cy=\"44\" rx=\"5\" ry=\"3\" fill=\"#f9c6d8\" transform=\"rotate(176 814 44)\"/>\u003cellipse cx=\"494\" cy=\"262\" rx=\"5\" ry=\"3\" fill=\"#fbd5e3\" transform=\"rotate(4 494 262)\"/>\u003cellipse cx=\"773\" cy=\"236\" rx=\"5\" ry=\"3\" fill=\"#f9c6d8\" transform=\"rotate(155 773 236)\"/>\u003cellipse cx=\"911\" cy=\"38\" rx=\"5\" ry=\"3\" fill=\"#f9c6d8\" transform=\"rotate(116 911 38)\"/>\u003cellipse cx=\"387\" cy=\"288\" rx=\"5\" ry=\"3\" fill=\"#f3a5c0\" transform=\"rotate(68 387 288)\"/>\u003cellipse cx=\"765\" cy=\"32\" rx=\"5\" ry=\"3\" fill=\"#f6b3cb\" transform=\"rotate(28 765 32)\"/>\u003cellipse cx=\"981\" cy=\"91\" rx=\"5\" ry=\"3\" fill=\"#f6b3cb\" transform=\"rotate(51 981 91)\"/>\u003cellipse cx=\"958\" cy=\"190\" rx=\"5\" ry=\"3\" fill=\"#fde0ea\" transform=\"rotate(52 958 190)\"/>\u003cellipse cx=\"560\" cy=\"155\" rx=\"5\" ry=\"3\" fill=\"#f6b3cb\" transform=\"rotate(69 560 155)\"/>\u003cellipse cx=\"595\" cy=\"25\" rx=\"5\" ry=\"3\" fill=\"#fbd5e3\" transform=\"rotate(9 595 25)\"/>\u003cellipse cx=\"390\" cy=\"218\" rx=\"5\" ry=\"3\" fill=\"#fde0ea\" transform=\"rotate(48 390 218)\"/>\u003cellipse cx=\"699\" cy=\"86\" rx=\"5\" ry=\"3\" fill=\"#f3a5c0\" transform=\"rotate(27 699 86)\"/>\u003cellipse cx=\"788\" cy=\"196\" rx=\"5\" ry=\"3\" fill=\"#f3a5c0\" transform=\"rotate(139 788 196)\"/>\u003cellipse cx=\"897\" cy=\"126\" rx=\"5\" ry=\"3\" fill=\"#fde0ea\" transform=\"rotate(78 897 126)\"/>\u003cellipse cx=\"806\" cy=\"285\" rx=\"5\" ry=\"3\" fill=\"#fbd5e3\" transform=\"rotate(50 806 285)\"/>\u003cellipse cx=\"896\" cy=\"211\" rx=\"5\" ry=\"3\" fill=\"#f6b3cb\" transform=\"rotate(103 896 211)\"/>\u003cellipse cx=\"993\" cy=\"285\" rx=\"5\" ry=\"3\" fill=\"#f6b3cb\" transform=\"rotate(3 993 285)\"/>\u003cellipse cx=\"424\" cy=\"220\" rx=\"5\" ry=\"3\" fill=\"#fbd5e3\" transform=\"rotate(110 424 220)\"/>\u003cellipse cx=\"481\" cy=\"43\" rx=\"5\" ry=\"3\" fill=\"#f3a5c0\" transform=\"rotate(129 481 43)\"/>\u003cellipse cx=\"796\" cy=\"96\" rx=\"5\" ry=\"3\" fill=\"#f6b3cb\" transform=\"rotate(177 796 96)\"/>\u003cellipse cx=\"562\" cy=\"144\" rx=\"5\" ry=\"3\" fill=\"#f6b3cb\" transform=\"rotate(68 562 144)\"/>\u003cellipse cx=\"656\" cy=\"91\" rx=\"5\" ry=\"3\" fill=\"#fbd5e3\" transform=\"rotate(140 656 91)\"/>\u003c/svg>"}</script>
+<script type="application/json" id="state">{"title":"Teacher Dashboard","tagline":"Teach · Inspire · Grow","name":"ครูปรัชญา ทรงบรรพต","school":"ครูภาษาอังกฤษ","schoolShort":"โรงเรียนวรราชาทินัดดามาตุวิทยา","quote":"ทุกวันคือโอกาสในการสร้างการเปลี่ยนแปลง","tags":["English Teacher","ม.3 · ม.4 · ม.5","Classroom Tool Maker"],"avatar":"profile.jpeg","groups":[{"id":"g1","name":"คะแนนและวัดผล","ico":"gradebook","c":340},{"id":"g2","name":"ตารางสอน","ico":"timetable","c":210},{"id":"g3","name":"งานฝ่ายและกลุ่มสาระ","ico":"meeting","c":42},{"id":"g4","name":"PA และวิทยฐานะ","ico":"medal","c":265},{"id":"g5","name":"บทเรียนและเกมในห้อง","ico":"game","c":140}],"links":[{"id":"l1","g":"g1","name":"Smart Scorebook","url":"","desc":"สมุดคะแนน งานค้าง เช็กชื่อ และจิตพิสัย","ico":"gradebook","c":22},{"id":"l2","g":"g1","name":"สมุดคะแนนอิเล็กทรอนิกส์","url":"","desc":"React + Supabase มีพอร์ทัลนักเรียน","ico":"report","c":210},{"id":"l3","g":"g1","name":"SGS Auto Fill","url":"https://claude.ai/artifact/WrX7Y3nnBnVPXLVUdsvbSY","desc":"ช่วยกรอกคะแนนเข้าระบบ SGS","ico":"form","c":172},{"id":"l4","g":"g2","name":"ค้นหาตารางสอน 2/2569","url":"https://claude.ai/artifact/UVdRMK5kdGRta8N6fjLqnp","desc":"ค้นตามครู ชั้นเรียน หรือห้อง","ico":"tsearch","c":210},{"id":"l5","g":"g2","name":"ตารางสอน วรราชาทินัดดามาตุ","url":"https://claude.ai/artifact/Cs4ucDHoRp8NTPqoipUm2J","desc":"ตารางสอนรวมของโรงเรียน","ico":"timetable","c":340},{"id":"l6","g":"g2","name":"ตารางติวโอเน็ต ม.3","url":"https://claude.ai/artifact/7uaaYBq3MBd2Q2ZxWmwDL2","desc":"ตารางติว O-NET ชั้น ม.3","ico":"schedule","c":22},{"id":"l7","g":"g3","name":"WNM งานวัดผลและประเมินผล Ver.25","url":"https://claude.ai/artifact/1BjSL5guxqBCq1ZnfhbR2F","desc":"ระบบงานฝ่ายวัดผล","ico":"assess","c":172},{"id":"l8","g":"g3","name":"WNM หลักฐานการศึกษา","url":"https://claude.ai/artifact/PmkrJrDJbC2C8ceHusAUsw","desc":"เอกสารหลักฐานการศึกษา","ico":"folder","c":42},{"id":"l9","g":"g3","name":"ตารางสอนกลุ่มสาระต่างประเทศ","url":"https://claude.ai/artifact/12usE1mUR1BYumPnQnxuW6","desc":"ตารางครูทั้งกลุ่มสาระ","ico":"meeting","c":265},{"id":"l10","g":"g4","name":"วิเคราะห์ชุดแผนการสอน Green Hero","url":"https://claude.ai/artifact/4fkfphFgr8rvjtiSsL21PH","desc":"ตามเกณฑ์ PA ชำนาญการพิเศษ","ico":"medal","c":340},{"id":"l11","g":"g5","name":"English Passport M.3","url":"https://claude.ai/artifact/4NPyS4uU5emXjsRDzEzmo5","desc":"กิจกรรมสะสมผลงาน ม.3","ico":"passport","c":210},{"id":"l12","g":"g5","name":"Green Hero Academy","url":"","desc":"Environment + Conditionals ม.3","ico":"globe","c":140},{"id":"l13","g":"g5","name":"Have/Has Got Spinning Wheel","url":"","desc":"เกมวงล้อคำศัพท์ ม.1","ico":"wheel","c":22},{"id":"l14","g":"g5","name":"Present Progressive Wheel","url":"","desc":"เกมวงล้อสำหรับโปรเจกเตอร์","ico":"wheel","c":340},{"id":"l15","g":"g5","name":"Museum of Words","url":"","desc":"there was / there were","ico":"museum","c":265},{"id":"l16","g":"g5","name":"Wh-Question Battle","url":"","desc":"เกมกระดาน Present Simple","ico":"chat","c":172},{"id":"l17","g":"g5","name":"Parts of Speech Quiz","url":"","desc":"แบบทดสอบพร้อมสรุปผล","ico":"quiz","c":2},{"id":"l18","g":"g5","name":"LMS พยัญชนะไทยและอักษรโรมัน","url":"","desc":"บทเรียน 20 ตอน + ข้อสอบ","ico":"abc","c":42}]}</script>
+<div id="app"></div>
+<script id="appjs">
+(function(){
+"use strict";
+var CSS=document.getElementById('css').textContent;
+var ASRC=document.getElementById('assets').textContent;
+var APPSRC=document.getElementById('appjs').textContent;
+var A=JSON.parse(ASRC);
+var S=JSON.parse(document.getElementById('state').textContent);
+var art=null,canSave=false,edit=false,dirty=0,saving=false,msg='',q='',view='all',calOff=0;
+
+var COLORS=[[22,'พีช'],[210,'ฟ้า'],[172,'เขียวอมฟ้า'],[340,'ชมพู'],[265,'ม่วง'],[42,'เหลือง'],[140,'เขียว'],[2,'แดง']];
+var I={
+ home:['หน้าหลัก','<path class="f" d="M8 22 24 9l16 13v17a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2z"/><path class="s" d="M19 41V29h10v12"/>'],
+ calendar:['ปฏิทิน','<rect class="f" x="7" y="10" width="34" height="31" rx="5"/><path class="s" d="M7 19h34M16 6v8M32 6v8"/><path class="d" d="M14 25h5v4h-5zM22 25h5v4h-5zM30 25h5v4h-5zM14 32h5v4h-5zM22 32h5v4h-5z"/>'],
+ schedule:['ตารางสอน','<rect class="f" x="5" y="9" width="30" height="28" rx="5"/><path class="s" d="M5 17h30M13 5v7M27 5v7M11 24h4M19 24h4M11 30h4"/><circle class="w" cx="35" cy="33" r="9"/><path class="s" d="M35 28.5V33l3 2"/>'],
+ timetable:['ตารางเรียน','<rect class="f" x="6" y="8" width="36" height="32" rx="5"/><path class="s" d="M6 17h36M6 25.5h36M6 33h36M17 17v23M29.5 17v23"/><path class="d" d="M20 28h6v3h-6z"/>'],
+ tsearch:['ค้นหาตาราง','<rect class="f" x="5" y="8" width="30" height="30" rx="5"/><path class="s" d="M5 16h30M13 4v7M27 4v7M11 23h4M19 23h4M11 30h4"/><circle class="w" cx="34" cy="31" r="7.5"/><path class="s" d="M39.5 36.5 44 41"/>'],
+ room:['ห้องเรียน','<path class="f" d="M9 41V14l15-7 15 7v27z"/><path class="s" d="M5 41h38M20 41V31h8v10M15 18h4M29 18h4M15 25h4M29 25h4"/>'],
+ book:['รายวิชา','<path class="f" d="M7 11c6-2 11-2 17 1v28c-6-3-11-3-17-1z"/><path class="f" d="M41 11c-6-2-11-2-17 1v28c6-3 11-3 17-1z"/><path class="s" d="M11 18c3-.8 6-.8 9 .5M11 24c3-.8 6-.8 9 .5M28 18.5c3-1.3 6-1.3 9-.5M28 24.5c3-1.3 6-1.3 9-.5"/>'],
+ gradebook:['สมุดคะแนน','<rect class="f" x="10" y="6" width="29" height="36" rx="4"/><path class="s" d="M10 13H6.5M10 21H6.5M10 29H6.5M10 37H6.5M17 30l4-11 4 11M18.5 26.5h5M32 21v7M28.5 24.5h7"/>'],
+ lessonplan:['แผนการสอน','<rect class="f" x="9" y="8" width="30" height="34" rx="4"/><rect class="w" x="17" y="4.5" width="14" height="7" rx="2.5"/><path class="s" d="M16 20h3M23 20h10M16 27h3M23 27h10M16 34h3M23 34h7"/>'],
+ assess:['ประเมินผล','<rect class="f" x="9" y="8" width="30" height="34" rx="4"/><rect class="w" x="17" y="4.5" width="14" height="7" rx="2.5"/><path class="s" d="M15 21l2.5 2.5L22 19M26 21h7M15 31l2.5 2.5L22 29M26 31h7"/>'],
+ students:['นักเรียน','<circle class="f" cx="17" cy="16" r="6.5"/><path class="f" d="M5 39c0-7 5.4-12 12-12s12 5 12 12z"/><circle class="w" cx="33" cy="18" r="5.5"/><path class="w" d="M27 39c0-6 2.5-11 6-11 5.5 0 10 4.6 10 11z"/>'],
+ report:['รายงาน','<rect class="f" x="7" y="7" width="34" height="34" rx="5"/><path class="d" d="M14 30h5v5h-5zM21.5 22h5v13h-5zM29 16h5v19h-5z"/><path class="s" d="M13 35h22"/>'],
+ settings:['ตั้งค่า','<circle class="f" cx="24" cy="24" r="11"/><circle class="w" cx="24" cy="24" r="4.5"/><path class="s" d="M24 5v6M24 37v6M5 24h6M37 24h6M10.6 10.6l4.2 4.2M33.2 33.2l4.2 4.2M10.6 37.4l4.2-4.2M33.2 14.8l4.2-4.2"/>'],
+ form:['กรอกข้อมูล','<rect class="f" x="5" y="8" width="38" height="26" rx="4"/><path class="s" d="M17 42h14M24 34v8M11 16h12M11 22h17M11 28h8"/><path class="d" d="M36 13l1.6 3.6L41 18l-3.4 1.5L36 23l-1.6-3.5L31 18l3.4-1.4z"/>'],
+ folder:['แฟ้มเอกสาร','<path class="f" d="M5 14a4 4 0 0 1 4-4h9l4 4h17a4 4 0 0 1 4 4v18a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z"/><path class="s" d="M5 20h38"/>'],
+ doc:['เอกสาร','<path class="f" d="M11 5h18l9 9v29H11z"/><path class="s" d="M29 5v9h9M17 22h14M17 29h14M17 36h9"/>'],
+ meeting:['ประชุม','<path class="f" d="M5 9h22a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H14l-6 5v-5H5a3 3 0 0 1-3-3V12a3 3 0 0 1 3-3z"/><path class="w" d="M43 18H26a3 3 0 0 0-3 3v9a3 3 0 0 0 3 3h11l5 4v-4h1a3 3 0 0 0 3-3v-9a3 3 0 0 0-3-3z"/><path class="s" d="M10 17h1M16 17h1M22 17h1"/>'],
+ medal:['เหรียญรางวัล','<path class="w" d="M15 4h7l4 12h-7zM33 4h-7l-4 12h7z"/><circle class="f" cx="24" cy="29" r="12"/><path class="d" d="M24 22l2.1 4.3 4.7.7-3.4 3.3.8 4.7-4.2-2.2-4.2 2.2.8-4.7-3.4-3.3 4.7-.7z"/>'],
+ passport:['พาสปอร์ต','<rect class="f" x="10" y="5" width="28" height="38" rx="4"/><circle class="w" cx="24" cy="21" r="8"/><path class="s" d="M16 21h16M24 13c-3.5 4.5-3.5 11.5 0 16M24 13c3.5 4.5 3.5 11.5 0 16M17 35h14"/>'],
+ globe:['โลก','<circle class="f" cx="22" cy="26" r="16"/><path class="s" d="M10 20c4 1 6 4 5 8s2 6 5 6M25 11c-1 4 3 6 6 5s5 3 4 7"/><path class="w" d="M30 12c0-5 4-9 11-9 0 6-4 10-11 9z"/>'],
+ wheel:['วงล้อ','<circle class="f" cx="22" cy="24" r="16"/><path class="s" d="M22 8v32M6 24h32M10.7 12.7l22.6 22.6M10.7 35.3l22.6-22.6"/><circle class="w" cx="22" cy="24" r="4"/><path class="d" d="M38 24l7-4.5v9z"/>'],
+ museum:['พิพิธภัณฑ์','<path class="f" d="M5 17 24 6l19 11z"/><path class="s" d="M10 21v14M19 21v14M29 21v14M38 21v14"/><rect class="f" x="5" y="36" width="38" height="6" rx="2"/>'],
+ chat:['สนทนา','<path class="f" d="M6 8h24a4 4 0 0 1 4 4v12a4 4 0 0 1-4 4H16l-7 6v-6H6a4 4 0 0 1-4-4V12a4 4 0 0 1 4-4z"/><path class="w" d="M38 20h4a4 4 0 0 1 4 4v9a4 4 0 0 1-4 4h-1v5l-6-5H26a4 4 0 0 1-4-4v-1"/><path class="s" d="M11 18h1M17.5 18h1M24 18h1"/>'],
+ quiz:['แบบทดสอบ','<rect class="f" x="9" y="5" width="30" height="38" rx="4"/><path class="s" d="M19 18a5 5 0 1 1 7.5 4.3c-1.8 1-2.5 2-2.5 4.2M24 33v.5"/>'],
+ abc:['ตัวอักษร','<rect class="f" x="5" y="22" width="18" height="18" rx="4"/><rect class="w" x="25" y="22" width="18" height="18" rx="4"/><rect class="w" x="15" y="4" width="18" height="17" rx="4"/><text x="9.5" y="36" font-size="13">ก</text><text x="29.5" y="36" font-size="13">A</text><text x="19.5" y="17.5" font-size="12">B</text>'],
+ game:['เกม','<rect class="f" x="4" y="14" width="40" height="22" rx="11"/><path class="s" d="M14 21v8M10 25h8"/><circle class="d" cx="31" cy="23" r="2"/><circle class="d" cx="36" cy="27.5" r="2"/>'],
+ bulb:['ไอเดีย','<path class="f" d="M24 5a13 13 0 0 0-8 23.3c1.4 1.1 2 2.6 2 4.2V34h12v-1.5c0-1.6.7-3.1 2-4.2A13 13 0 0 0 24 5z"/><path class="s" d="M19 39h10M21 43h6"/>'],
+ star:['ดาว','<path class="f" d="M24 5l5.6 11.4 12.6 1.8-9.1 8.9 2.1 12.5L24 33.7l-11.2 5.9 2.1-12.5-9.1-8.9 12.6-1.8z"/>'],
+ megaphone:['ประกาศ','<path class="f" d="M6 19h8l20-11v32L14 29H6z"/><path class="s" d="M12 29l3 11h6l-3-11M40 18a8 8 0 0 1 0 12"/>'],
+ video:['วิดีโอ','<rect class="f" x="4" y="8" width="40" height="27" rx="4"/><path class="d" d="M20 15l10 6.5L20 28z"/><path class="s" d="M17 42h14M24 35v7"/>'],
+ download:['ดาวน์โหลด','<path class="f" d="M13 34a9 9 0 0 1-1-17.9A12 12 0 0 1 35 15a9.5 9.5 0 0 1-1 19z"/><path class="s" d="M24 22v20M17.5 36 24 42l6.5-6"/>'],
+ link:['ลิงก์','<rect class="f" x="4" y="4" width="40" height="40" rx="10"/><path class="s" d="M21 27a6 6 0 0 0 8.5 0l5-5a6 6 0 0 0-8.5-8.5l-1.5 1.5M27 21a6 6 0 0 0-8.5 0l-5 5a6 6 0 0 0 8.5 8.5l1.5-1.5"/>']};
+var GUESS=[[/passport/i,'passport'],[/green|environment|สิ่งแวดล้อม/i,'globe'],[/wheel|วงล้อ/i,'wheel'],[/museum|พิพิธ/i,'museum'],[/battle|speak|ฟัง|พูด|สนทนา/i,'chat'],[/quiz|test|ทดสอบ|ข้อสอบ/i,'quiz'],[/lms|พยัญชนะ|อักษร/i,'abc'],[/o-?net|โอเน็ต|ติว/i,'schedule'],[/\bpa\b|วิทยฐานะ|รางวัล/i,'medal'],[/แผนการ|lesson plan/i,'lessonplan'],[/ค้นหา/i,'tsearch'],[/ใช้ห้อง|room/i,'room'],[/กลุ่มสาระ|ประชุม|ฝ่าย/i,'meeting'],[/ตาราง|schedule|timetable/i,'timetable'],[/หลักฐาน|แฟ้ม/i,'folder'],[/เอกสาร|doc/i,'doc'],[/วัดผล|ประเมิน|wnm/i,'assess'],[/sgs|auto ?fill|กรอก/i,'form'],[/อิเล็กทรอนิกส์|gradebook|สรุปผล|รายงาน/i,'report'],[/scorebook|คะแนน/i,'gradebook'],[/นักเรียน|student/i,'students'],[/ข่าว|ประกาศ/i,'megaphone'],[/ดาวน์โหลด|download/i,'download'],[/idea|ไอเดีย/i,'bulb'],[/video|youtube|คลิป/i,'video'],[/game|เกม/i,'game'],[/book|บทเรียน|วิชา/i,'book']];
+var SVGI={edit:'<svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg>',plus:'<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>',
+ left:'<svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>',right:'<svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>',
+ up:'<svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg>',down:'<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>'};
+var DAYS=['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'];
+var MONTHS=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function uid(){return Math.random().toString(36).slice(2,9);}
+function safeUrl(u){u=String(u||'').trim();if(u&&!/^[a-z]+:/i.test(u)&&/^[\w.-]+\.[a-z]{2,}/i.test(u))u='https://'+u;return /^https?:\/\//i.test(u)?u:'';}
+function isImg(d){return typeof d==='string'&&(/^data:image\//.test(d)||/^(https:\/\/|\.?\/?)[\w\-.\/%]+\.(png|jpe?g|webp|gif|svg)$/i.test(d));}
+function fi(k,h){return '<svg class="fi" viewBox="0 0 48 48" aria-hidden="true"'+(h!=null?' style="--h:'+h+'"':'')+'>'+(I[k]||I.link)[1]+'</svg>';}
+function guessIco(l){var s=l.name+' '+(l.desc||'');for(var i=0;i<GUESS.length;i++)if(GUESS[i][0].test(s))return GUESS[i][1];return 'link';}
+function linkIco(l){return I[l.ico]?l.ico:guessIco(l);}
+function linkHue(l,i){return typeof l.c==='number'?l.c:COLORS[i%COLORS.length][0];}
+function groupIco(g){return I[g.ico]?g.ico:'folder';}
+function bkk(){var p={};new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Bangkok',weekday:'short',hour:'2-digit',minute:'2-digit',hour12:false,year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date()).forEach(function(x){p[x.type]=x.value;});
+  return {y:+p.year,m:+p.month,d:+p.day,wd:{Sun:0,Mon:1,Tue:2,Wed:3,Thu:4,Fri:5,Sat:6}[p.weekday],mins:(+p.hour%24)*60+ +p.minute,h:+p.hour%24};}
+function toM(s){var a=s.split('.');return +a[0]*60+ +a[1];}
+function clsDisp(c){var m=String(c).match(/^(\d)\/(\d+)(.*)$/);return m?'ม.'+m[1]+'/'+m[2]:c;}
+
+var app=document.getElementById('app');
+app.innerHTML='<div class="wrap"><aside class="side" id="side"></aside><div class="main"><header class="top" id="top"></header><section class="banner" id="banner"></section><section class="panel" id="board"></section><div class="duo"><section class="panel" id="today"></section><section class="panel" id="cal"></section></div></div></div><div class="savebar" id="bar" hidden></div><div class="modal" id="modal" hidden></div>';
+var $=function(id){return document.getElementById(id);};
+
+function render(){renderSide();renderTop();renderBanner();renderBoard();renderToday();renderCal();renderBar();}
+function crest(){return '<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 4l22 8v18c0 15-10 25-22 30C20 55 10 45 10 30V12z" fill="#fde3ec" stroke="#e8789c" stroke-width="2.5" stroke-linejoin="round"/><path d="M20 26c4-2 8-2 12 1v15c-4-3-8-3-12-1zM44 26c-4-2-8-2-12 1v15c4-3 8-3 12-1z" fill="#fff" stroke="#d45a83" stroke-width="2" stroke-linejoin="round"/><path d="M32 12l2 4 4.5.6-3.3 3 .8 4.4-4-2.1-4 2.1.8-4.4-3.3-3L30 16z" fill="#f4b740"/></svg>';}
+function renderSide(){
+  var cnt=function(g){return S.links.filter(function(l){return l.g===g.id;}).length;};
+  var items=[['all','home','หน้าหลัก',S.links.length,340]].concat(S.groups.map(function(g){return [g.id,groupIco(g),g.name,cnt(g),g.c!=null?g.c:22];}));
+  $('side').innerHTML='<div class="logo"><div class="em">'+(isImg(S.logo)?'<img src="'+esc(S.logo)+'" alt="โลโก้โรงเรียน">':crest())+'</div><small>'+esc(S.schoolShort||'')+'</small></div>'+
+   '<nav class="nav" aria-label="หมวดระบบ">'+items.map(function(it){return '<button data-view="'+esc(it[0])+'"'+(view===it[0]?' aria-current="page"':'')+'>'+fi(it[1],it[4])+'<span>'+esc(it[2])+'</span><span class="n">'+it[3]+'</span></button>';}).join('')+
+   (canSave?'<button data-act="edit"'+(edit?' aria-current="page"':'')+'>'+fi('settings',265)+'<span>'+(edit?'เสร็จสิ้นการแก้ไข':'แก้ไขหน้า')+'</span></button><button data-act="pin">'+fi('assess',172)+'<span>เปลี่ยนรหัสผ่าน</span></button><button data-act="logout">'+fi('home',2)+'<span>ออกจากโหมดครู</span></button>':'<button data-act="login">'+fi('settings',265)+'<span>โหมดครู (แก้ไข)</span></button>')+'</nav>'+
+   (remote===false?'<small class="note" style="padding:0 8px">ใช้ข้อมูลสำรองในไฟล์ (เชื่อมฐานข้อมูลไม่ได้)</small>':'');
+}
+function renderTop(){
+  var had=document.activeElement&&document.activeElement.id==='q';
+  if(!$('q')){
+    $('top').innerHTML='<div class="ttl"><h1 id="ttl"></h1><div class="tagline" id="tagline"></div></div><div class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" type="search" placeholder="ค้นหาระบบ…" autocomplete="off" aria-label="ค้นหาระบบ"></div><span id="topbtn"></span><div class="me" id="me"></div>';
+    $('q').addEventListener('input',function(e){q=e.target.value.trim().toLowerCase();renderBoard();});
+  }
+  $('ttl').innerHTML=esc(S.title||'Teacher Dashboard');
+  $('tagline').textContent=S.tagline||'';
+  $('topbtn').innerHTML=edit?'<button class="btn pri" data-act="add" data-g="">'+SVGI.plus+'เพิ่มลิงก์</button>':'';
+  $('me').innerHTML=isImg(S.avatar)?'<img src="'+esc(S.avatar)+'" alt="">':'<span>'+esc((S.name||'ป').replace(/^ครู/,'').charAt(0))+'</span>';
+  if(had)$('q').focus();
+}
+function renderBanner(){
+  var t=bkk(),greet=t.h<12?'Good Morning, Teacher!':t.h<17?'Good Afternoon, Teacher!':'Good Evening, Teacher!';
+  var tags=(S.tags||[]).map(function(x){return '<span class="tag">'+esc(x)+'</span>';}).join('');
+  $('banner').innerHTML=(isImg(S.banner)?'<img class="photo" src="'+esc(S.banner)+'" alt="">':A.blossom)+'<div class="veil"></div>'+
+   '<div class="txt"><span class="hello">'+greet+'</span><span class="nm">'+esc(S.name)+' · '+esc(S.school)+'</span>'+(S.quote?'<span class="q">“'+esc(S.quote)+'”</span>':'')+(tags?'<div class="tags">'+tags+'</div>':'')+
+   (edit?'<div><button class="btn" data-act="profile">'+SVGI.edit+'แก้ข้อมูลครู รูป และแบนเนอร์</button></div>':'')+'</div>';
+}
+function match(l){if(!q)return true;return (l.name+' '+(l.desc||'')+' '+l.url).toLowerCase().indexOf(q)>=0;}
+function renderBoard(){
+  var gs=view==='all'?S.groups:S.groups.filter(function(g){return g.id===view;});
+  var vg=S.groups.filter(function(g){return g.id===view;})[0];
+  var out='',n=0;
+  gs.forEach(function(g){
+    var gi=S.groups.indexOf(g);
+    var arr=S.links.filter(function(l){return l.g===g.id&&match(l);});
+    if(!arr.length&&(!edit||q))return;n+=arr.length;
+    out+='<div class="gsec"><h3>'+fi(groupIco(g),g.c!=null?g.c:22)+esc(g.name)+' <span class="n">'+arr.length+'</span>'+
+     (edit?'<span class="tools"><button class="btn ghost" data-act="gup" data-i="'+gi+'" aria-label="เลื่อนหมวดขึ้น">'+SVGI.up+'</button><button class="btn ghost" data-act="gdown" data-i="'+gi+'" aria-label="เลื่อนหมวดลง">'+SVGI.down+'</button><button class="btn ghost" data-act="gedit" data-id="'+g.id+'">'+SVGI.edit+'แก้หมวด</button></span>':'')+'</h3><div class="tiles">'+
+     arr.map(function(l){return tile(l,S.links.indexOf(l));}).join('')+(edit?'<button class="addtile" data-act="add" data-g="'+g.id+'">'+SVGI.plus+'เพิ่มลิงก์</button>':'')+'</div></div>';
+  });
+  if(edit&&!q&&view==='all')out+='<div><button class="btn" data-act="gadd">'+SVGI.plus+'เพิ่มหมวด</button></div>';
+  $('board').innerHTML='<div class="phead"><h2>'+(vg?esc(vg.name):'ระบบของฉัน')+'</h2><span class="en">'+(vg?'':'My Systems')+'</span><span class="sp"></span><span class="note">กดที่ปุ่มเพื่อเปิดระบบ</span></div>'+
+   (out||'<div class="empty">'+(q?'ไม่พบระบบที่ค้นหา':'ยังไม่มีลิงก์ในหมวดนี้')+'</div>');
+}
+function tile(l,i){
+  var u=safeUrl(l.url),h=linkHue(l,i);
+  var pic=isImg(l.img)?'<img class="ph" src="'+esc(l.img)+'" alt="">':fi(linkIco(l));
+  var inner=pic+'<b>'+esc(l.name)+'</b>'+(l.desc?'<span class="d">'+esc(l.desc)+'</span>':'')+(u?'':'<span class="soon">ยังไม่มีลิงก์</span>');
+  if(edit)return '<div class="tile edit'+(u?'':' nolink')+'" style="--h:'+h+'"><span class="ed"><span style="display:flex;gap:2px"><button data-act="mleft" data-id="'+l.id+'" aria-label="เลื่อนไปก่อน">'+SVGI.left+'</button><button data-act="mright" data-id="'+l.id+'" aria-label="เลื่อนไปหลัง">'+SVGI.right+'</button></span><button data-act="ledit" data-id="'+l.id+'" aria-label="แก้ไข">'+SVGI.edit+'</button></span>'+inner+'</div>';
+  if(!u)return '<div class="tile nolink" style="--h:'+h+'">'+inner+'</div>';
+  return '<a class="tile" style="--h:'+h+'" href="'+esc(u)+'" target="_blank" rel="noopener">'+inner+'</a>';
+}
+function renderToday(){
+  var t=bkk(),day=t.wd>=1&&t.wd<=5?t.wd:1,isToday=t.wd>=1&&t.wd<=5;
+  var per=0;for(var i=1;i<A.times.length;i++){if(t.mins>=toM(A.times[i][0])&&t.mins<toM(A.times[i][1])){per=i;break;}}
+  var list=A.me.filter(function(e){return e[0]===day;}).sort(function(a,b){return a[1]-b[1];});
+  var rows=list.map(function(e){
+    var act=e[2].charAt(0)==='~',now=isToday&&e[1]===per;
+    var sj=act?esc(e[2].slice(1)):esc(A.names[e[2]]||e[2])+' <small>'+esc(e[2])+' · ห้อง '+esc(e[4])+'</small>';
+    return '<div class="crow'+(act?' act':'')+(now?' now':'')+'"><span class="tm">'+A.times[e[1]][0]+'</span><span class="cl">'+(act?'คาบ '+e[1]:esc(clsDisp(e[3])))+'</span><span class="sj">'+sj+'</span></div>';
+  }).join('');
+  $('today').innerHTML='<div class="phead"><h2>'+(isToday?'คาบสอนวันนี้':'คาบสอนวันจันทร์')+'</h2><span class="en">'+(isToday?"Today's Classes":'Next school day')+'</span><span class="sp"></span><span class="note">ภาคเรียน '+esc(A.term)+'</span></div>'+
+   (rows?'<div class="cls">'+rows+'</div>':'<div class="empty">ไม่มีคาบสอน</div>');
+}
+function renderCal(){
+  var t=bkk(),y=t.y,m=t.m-1+calOff;y+=Math.floor(m/12);m=((m%12)+12)%12;
+  var first=new Date(Date.UTC(y,m,1)).getUTCDay(),days=new Date(Date.UTC(y,m+1,0)).getUTCDate();
+  var h='<div class="grid7">'+['อา','จ','อ','พ','พฤ','ศ','ส'].map(function(d){return '<span class="dn">'+d+'</span>';}).join('');
+  for(var i=0;i<first;i++)h+='<span></span>';
+  for(var d=1;d<=days;d++){var wd=(first+d-1)%7,td=calOff===0&&d===t.d;h+='<span class="dd'+(wd===0||wd===6?' wk':'')+(td?' td':'')+'"'+(td?' aria-current="date"':'')+'>'+d+'</span>';}
+  h+='</div>';
+  $('cal').innerHTML='<div class="cal"><div class="calh"><b>'+MONTHS[m]+' '+(y+543)+'</b><button class="ib" data-act="calprev" aria-label="เดือนก่อน">'+SVGI.left+'</button><button class="ib" data-act="calnext" aria-label="เดือนถัดไป">'+SVGI.right+'</button></div>'+h+'</div>';
+}
+function renderBar(){
+  var b=$('bar');
+  if(!dirty&&!msg){b.hidden=true;return;}
+  b.hidden=false;
+  b.innerHTML='<div><span>'+esc(msg||'มีการแก้ไขที่ยังไม่บันทึก')+'</span>'+(dirty?'<button class="btn ghost" data-act="discard">ยกเลิก</button><button class="btn" data-act="save"'+(saving?' disabled':'')+'>บันทึก</button>':'')+'</div>';
+}
+function touch(){dirty++;msg='';render();}
+
+/* save: Supabase (table hub_pages, functions hub_check_pin / hub_save / hub_change_pin) */
+var SB_URL='https://lhtxkaakztygfxvcodqx.supabase.co',SB_KEY='sb_publishable_G3UGEKJ0-Y9vYB-y1G2-bw_btlGVyMl',HUB_ID='main',pin='',base=null,remote=null;
+function sb(path,opt){opt=opt||{};opt.headers=Object.assign({'apikey':SB_KEY,'Content-Type':'application/json'},opt.headers||{});
+  return fetch(SB_URL+'/rest/v1/'+path,opt).then(function(r){return r.text().then(function(t){var j=null;try{j=t?JSON.parse(t):null;}catch(e){}if(!r.ok){var m=(j&&(j.message||j.hint))||('HTTP '+r.status);throw new Error(m);}return j;});});}
+function rpc(fn,body){return sb('rpc/'+fn,{method:'POST',body:JSON.stringify(body)});}
+function errText(e){var m=String(e&&e.message||e);
+  if(/locked/.test(m))return 'ใส่รหัสผิดหลายครั้ง ระบบล็อกไว้ 15 นาที';
+  if(/conflict/.test(m))return 'มีการบันทึกจากเครื่องอื่นก่อนหน้า กด "ยกเลิก" เพื่อโหลดข้อมูลล่าสุดก่อนแก้ใหม่';
+  if(/too_large/.test(m))return 'ข้อมูลใหญ่เกินไป ลองใช้รูปที่เล็กลง';
+  if(/short_pin/.test(m))return 'รหัสใหม่ต้องยาวอย่างน้อย 6 ตัวอักษร';
+  if(/Failed to fetch|NetworkError|HTTP 5/.test(m))return 'เชื่อมต่อฐานข้อมูลไม่ได้ ลองใหม่อีกครั้ง';
+  return 'ทำไม่สำเร็จ: '+m;}
+function loadRemote(){
+  return sb('hub_pages?id=eq.'+HUB_ID+'&select=data,updated_at').then(function(rows){
+    if(rows&&rows[0]&&rows[0].data&&rows[0].data.links){S=rows[0].data;base=rows[0].updated_at;remote=true;}else remote=false;
+    render();
+  },function(){remote=false;render();});
+}
+function save(){
+  if(!canSave||saving)return;saving=true;msg='กำลังบันทึก…';renderBar();
+  rpc('hub_save',{p_id:HUB_ID,p_pin:pin,p_data:S,p_base:base}).then(function(ts){
+    saving=false;
+    if(!ts){msg='รหัสผ่านไม่ถูกต้อง กรุณาเข้าโหมดครูใหม่';canSave=false;edit=false;pin='';render();return;}
+    base=ts;dirty=0;msg='บันทึกแล้ว';renderBar();setTimeout(function(){if(!dirty){msg='';renderBar();}},2500);
+  },function(e){saving=false;msg=errText(e);renderBar();});
+}
+function loginForm(){
+  form('เข้าสู่โหมดครู',[{k:'pin',l:'รหัสผ่านครู',req:1,pw:1}],{},function(o){
+    var btn=$m.querySelector('[type=submit]');btn.disabled=true;$('e-pin').textContent='';
+    rpc('hub_check_pin',{p_id:HUB_ID,p_pin:o.pin}).then(function(ok){
+      if(ok===true){pin=o.pin;canSave=true;edit=true;closeF();render();}
+      else{btn.disabled=false;$('e-pin').textContent='รหัสผ่านไม่ถูกต้อง';}
+    },function(e){btn.disabled=false;$('e-pin').textContent=errText(e);});
+    return false;
+  });
+}
+function pinForm(){
+  form('เปลี่ยนรหัสผ่านครู',[{k:'old',l:'รหัสผ่านเดิม',req:1,pw:1},{k:'nw',l:'รหัสผ่านใหม่ (อย่างน้อย 6 ตัว)',req:1,pw:1},{k:'nw2',l:'พิมพ์รหัสผ่านใหม่อีกครั้ง',req:1,pw:1}],{},function(o){
+    if(o.nw!==o.nw2){$('e-nw2').textContent='รหัสผ่านใหม่ไม่ตรงกัน';return false;}
+    var btn=$m.querySelector('[type=submit]');btn.disabled=true;
+    rpc('hub_change_pin',{p_id:HUB_ID,p_old:o.old,p_new:o.nw}).then(function(ok){
+      if(ok===true){pin=o.nw;closeF();msg='เปลี่ยนรหัสผ่านแล้ว';renderBar();setTimeout(function(){msg='';renderBar();},2500);}
+      else{btn.disabled=false;$('e-old').textContent='รหัสผ่านเดิมไม่ถูกต้อง';}
+    },function(e){btn.disabled=false;$('e-nw').textContent=errText(e);});
+    return false;
+  });
+}
+
+/* forms */
+var F=null,$m=$('modal');
+function form(title,fields,v,ok,del){
+  F={fields:fields,ok:ok,del:del,armed:false,val:{},up:{}};
+  $m.innerHTML='<form class="dlg"><h3>'+esc(title)+'</h3>'+fields.map(function(f){
+    var val=v[f.k]==null?'':v[f.k],id='f-'+f.k,inp;
+    if(f.t==='select')inp='<select id="'+id+'">'+f.o.map(function(o){return '<option value="'+esc(o[0])+'"'+(String(o[0])===String(val)?' selected':'')+'>'+esc(o[1])+'</option>';}).join('')+'</select>';
+    else if(f.t==='area')inp='<textarea id="'+id+'">'+esc(val)+'</textarea>';
+    else if(f.t==='icon'||f.t==='color'){F.val[f.k]=val;inp='<div class="'+(f.t==='icon'?'picker':'swatches')+'" id="'+id+'" role="group" aria-label="'+esc(f.l)+'"></div>';}
+    else if(f.t==='image'){F.up[f.k]=isImg(val)?val:'';inp='<div class="upl" id="'+id+'"></div>';}
+    else inp='<input id="'+id+'" type="'+(f.pw?'password':'text')+'" value="'+esc(val)+'"'+(f.req?' required':'')+(f.ph?' placeholder="'+esc(f.ph)+'"':'')+(f.k==='url'?' inputmode="url" autocapitalize="off" spellcheck="false"':'')+'>';
+    return '<div class="fld"><label for="'+id+'">'+esc(f.l)+'</label>'+inp+(f.h?'<span class="note">'+esc(f.h)+'</span>':'')+'<span class="err" id="e-'+f.k+'"></span></div>';
+  }).join('')+'<div class="btns"><div>'+(del?'<button type="button" class="btn danger" data-f="del">ลบ</button>':'')+'</div><div><button type="button" class="btn" data-f="close">ยกเลิก</button><button type="submit" class="btn pri">ตกลง</button></div></div></form>';
+  fields.forEach(drawField);
+  $m.hidden=false;var first=$m.querySelector('input[type=text],input[type=password],select,textarea');if(first)first.focus();
+}
+function curHue(){var c=F.fields.filter(function(f){return f.t==='color';})[0];return c?F.val[c.k]:340;}
+function drawField(f){
+  var box=$('f-'+f.k);if(!box)return;
+  if(f.t==='icon'){var cur=F.val[f.k],h=curHue(),s='';
+    if(f.auto)s+='<button type="button" class="txt" data-pk="'+f.k+'" data-v="" aria-pressed="'+(cur===''||cur==null)+'">อัตโนมัติ</button>';
+    Object.keys(I).forEach(function(k){s+='<button type="button" data-pk="'+f.k+'" data-v="'+k+'" aria-pressed="'+(cur===k)+'" title="'+esc(I[k][0])+'" aria-label="'+esc(I[k][0])+'">'+fi(k,h)+'</button>';});
+    box.innerHTML=s;}
+  else if(f.t==='color'){box.innerHTML=COLORS.map(function(c){return '<button type="button" style="--h:'+c[0]+'" data-pk="'+f.k+'" data-v="'+c[0]+'" aria-pressed="'+(String(F.val[f.k])===String(c[0]))+'" aria-label="'+c[1]+'" title="'+c[1]+'"></button>';}).join('');}
+  else if(f.t==='image'){var u=F.up[f.k];box.innerHTML=(u?'<img src="'+esc(u)+'" alt=""><button type="button" class="btn ghost" data-clear="'+f.k+'">เอารูปออก</button>':'')+'<input type="file" accept="image/*" data-file="'+f.k+'" aria-label="'+esc(f.l)+'">';}
+}
+function closeF(){$m.hidden=true;$m.innerHTML='';F=null;}
+$m.addEventListener('submit',function(e){e.preventDefault();var o={};F.fields.forEach(function(f){o[f.k]=f.t==='icon'||f.t==='color'?F.val[f.k]:f.t==='image'?F.up[f.k]:$('f-'+f.k).value.trim();});if(F.ok(o)===false)return;closeF();touch();});
+$m.addEventListener('click',function(e){
+  if(e.target===$m){closeF();return;}
+  var pk=e.target.closest('[data-pk]');
+  if(pk){var k=pk.dataset.pk,f=F.fields.filter(function(x){return x.k===k;})[0];F.val[k]=f.t==='color'?+pk.dataset.v:pk.dataset.v;F.fields.forEach(function(x){if(x.t==='icon'||x.k===k)drawField(x);});return;}
+  var cl=e.target.closest('[data-clear]');if(cl){F.up[cl.dataset.clear]='';F.fields.forEach(drawField);return;}
+  var b=e.target.closest('[data-f]');if(!b)return;
+  if(b.dataset.f==='close')closeF();
+  if(b.dataset.f==='del'){if(!F.armed){F.armed=true;b.textContent='กดอีกครั้งเพื่อยืนยันการลบ';return;}F.del();closeF();touch();}
+});
+$m.addEventListener('change',function(e){
+  var k=e.target.dataset&&e.target.dataset.file;if(!k)return;var f=e.target.files&&e.target.files[0];if(!f)return;
+  var fd=F.fields.filter(function(x){return x.k===k;})[0];
+  if(!/^image\//.test(f.type)){$('e-'+k).textContent='เลือกได้เฉพาะไฟล์รูปภาพ';return;}
+  var rd=new FileReader();rd.onload=function(){var im=new Image();im.onload=function(){
+    var W=fd.w,H=fd.h,c=document.createElement('canvas'),x=c.getContext('2d');
+    if(fd.fit==='contain'){var r0=Math.min(W/im.width,H/im.height);c.width=Math.round(im.width*r0);c.height=Math.round(im.height*r0);x.drawImage(im,0,0,c.width,c.height);F.up[k]=c.toDataURL('image/png');}
+    else{c.width=W;c.height=H;var r=Math.max(W/im.width,H/im.height),w=im.width*r,h=im.height*r;x.drawImage(im,(W-w)/2,(H-h)/2,w,h);F.up[k]=c.toDataURL('image/jpeg',.8);}
+    $('e-'+k).textContent='';drawField(fd);};
+    im.onerror=function(){$('e-'+k).textContent='เปิดรูปนี้ไม่ได้ ลองไฟล์อื่น';};im.src=rd.result;};
+  rd.readAsDataURL(f);
+});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!$m.hidden)closeF();});
+
+function gOpts(){return S.groups.map(function(g){return [g.id,g.name];});}
+function linkForm(l,gid){
+  if(!S.groups.length)S.groups.push({id:uid(),name:'ระบบทั้งหมด',ico:'folder',c:340});
+  var i=l?S.links.indexOf(l):S.links.length;
+  var v=l?{name:l.name,url:l.url,g:l.g,desc:l.desc,ico:I[l.ico]?l.ico:'',c:linkHue(l,i),img:l.img||''}:{g:gid||(view!=='all'?view:S.groups[0].id),ico:'',c:COLORS[i%COLORS.length][0]};
+  form(l?'แก้ลิงก์':'เพิ่มลิงก์',[{k:'name',l:'ชื่อระบบ',req:1},{k:'url',l:'ลิงก์',ph:'https://…'},{k:'g',l:'หมวด',t:'select',o:gOpts()},{k:'desc',l:'คำอธิบายสั้น ๆ',t:'area'},
+    {k:'c',l:'สีปุ่ม',t:'color'},{k:'ico',l:'ไอคอน',t:'icon',auto:1},{k:'img',l:'หรือใช้รูปของครูเอง (แทนไอคอน)',t:'image',w:240,h:180}],v,function(o){
+    if(o.url&&!safeUrl(o.url)){$('e-url').textContent='ลิงก์ต้องขึ้นต้นด้วย https://';return false;}
+    var t=l||{id:uid()};t.name=o.name;t.url=safeUrl(o.url);t.g=o.g;t.desc=o.desc;t.c=+o.c;
+    if(o.ico)t.ico=o.ico;else delete t.ico;
+    if(o.img)t.img=o.img;else delete t.img;
+    if(!l)S.links.push(t);
+  },l?function(){S.links=S.links.filter(function(x){return x!==l;});}:null);
+}
+function groupForm(g){
+  var v=g?{name:g.name,ico:groupIco(g),c:g.c!=null?g.c:22}:{ico:'folder',c:COLORS[S.groups.length%COLORS.length][0]};
+  form(g?'แก้หมวด':'เพิ่มหมวด',[{k:'name',l:'ชื่อหมวด',req:1},{k:'c',l:'สี',t:'color'},{k:'ico',l:'ไอคอนหมวด',t:'icon'}],v,function(o){
+    var t=g||{id:uid()};t.name=o.name;t.ico=o.ico||'folder';t.c=+o.c;delete t.hue;if(!g)S.groups.push(t);
+  },g?function(){var rest=S.groups.filter(function(x){return x!==g;});if(rest.length)S.links.forEach(function(l){if(l.g===g.id)l.g=rest[0].id;});else S.links=S.links.filter(function(l){return l.g!==g.id;});S.groups=rest;if(view===g.id)view='all';}:null);
+}
+function profileForm(){
+  form('ข้อมูลครูและรูปภาพ',[{k:'title',l:'ชื่อหน้า',req:1},{k:'tagline',l:'คำโปรย'},{k:'name',l:'ชื่อครู',req:1},{k:'school',l:'ตำแหน่ง / โรงเรียน'},{k:'schoolShort',l:'ข้อความใต้โลโก้'},{k:'quote',l:'คำคมบนแบนเนอร์'},{k:'tags',l:'ป้ายคำ (คั่นด้วย ,)'},
+    {k:'avatar',l:'รูปโปรไฟล์',t:'image',w:200,h:200},{k:'logo',l:'โลโก้โรงเรียน',t:'image',w:220,h:220,fit:'contain'},{k:'banner',l:'ภาพแบนเนอร์ (เช่น รูปโรงเรียน)',t:'image',w:1400,h:460,h2:1}],
+   {title:S.title,tagline:S.tagline,name:S.name,school:S.school,schoolShort:S.schoolShort,quote:S.quote,tags:(S.tags||[]).join(', '),avatar:S.avatar,logo:S.logo,banner:S.banner},function(o){
+    ['title','tagline','name','school','schoolShort','quote'].forEach(function(k){S[k]=o[k];});
+    S.tags=o.tags.split(',').map(function(x){return x.trim();}).filter(Boolean);
+    ['avatar','logo','banner'].forEach(function(k){if(o[k])S[k]=o[k];else delete S[k];});
+  });
+}
+function moveLink(id,dir){
+  var l=S.links.filter(function(x){return x.id===id;})[0];if(!l)return;
+  var same=S.links.filter(function(x){return x.g===l.g;}),i=same.indexOf(l),o=same[i+dir];if(!o)return;
+  var a=S.links.indexOf(l),b=S.links.indexOf(o);S.links[a]=o;S.links[b]=l;touch();
+}
+function moveGroup(i,dir){var j=i+dir;if(j<0||j>=S.groups.length)return;var t=S.groups[i];S.groups[i]=S.groups[j];S.groups[j]=t;touch();}
+
+document.addEventListener('click',function(e){
+  if(!$m.hidden&&$m.contains(e.target))return;
+  var vb=e.target.closest('[data-view]');if(vb){view=vb.dataset.view;renderSide();renderBoard();if(innerWidth<980)$('board').scrollIntoView({behavior:'smooth',block:'start'});return;}
+  var b=e.target.closest('[data-act]');if(!b)return;var d=b.dataset;
+  switch(d.act){
+    case 'edit':edit=!edit;render();break;
+    case 'profile':profileForm();break;
+    case 'add':linkForm(null,d.g);break;
+    case 'ledit':linkForm(S.links.filter(function(x){return x.id===d.id;})[0]);break;
+    case 'gadd':groupForm(null);break;
+    case 'gedit':groupForm(S.groups.filter(function(x){return x.id===d.id;})[0]);break;
+    case 'mleft':moveLink(d.id,-1);break;case 'mright':moveLink(d.id,1);break;
+    case 'gup':moveGroup(+d.i,-1);break;case 'gdown':moveGroup(+d.i,1);break;
+    case 'calprev':calOff--;renderCal();break;case 'calnext':calOff++;renderCal();break;
+    case 'save':save();break;case 'discard':location.reload();break;
+    case 'login':loginForm();break;case 'pin':pinForm();break;
+    case 'logout':if(dirty){msg='กดบันทึกหรือยกเลิกก่อนออกจากโหมดครู';renderBar();break;}canSave=false;edit=false;pin='';render();break;
+  }
+});
+
+render();
+setInterval(function(){if($m.hidden){renderToday();}},60000);
+loadRemote();
+})();
+</script>
+
+</body>
+</html>
